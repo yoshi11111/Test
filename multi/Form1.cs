@@ -31,12 +31,11 @@ namespace multiWindow
 
         // ファイルパスリスト
         static readonly string[] filePathList = new string[]{
-            @"C:\Users\userpc\Desktop\VSソースコード\log4\log4\bin\Debug\log4.exe",
-            @"C:\Users\userpc\Desktop\VSソースコード\log4\log4\bin\Debug\log4.exe",
-            @"C:\Users\userpc\Desktop\VSソースコード\log4\log4\bin\Debug\log4.exe",
-            @"C:\Users\userpc\Desktop\VSソースコード\log4\log4\bin\Debug\log4.exe",
-            @"C:\Users\userpc\Desktop\VSソースコード\log4\log4\bin\Debug\log4.exe"
-
+            @"C:\4.exe",
+            @"C:\4.exe",
+            @"C:\4.exe",
+            @"C:\4.exe",
+            @"C:\4.exe"
             };
 
         Process p1;
