@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -178,6 +179,76 @@ namespace CodeAssist
         private void listView1_SelectedIndexChanged(object sender, EventArgs e)
         {
 
+        }
+
+        string uri = "https://translate.google.co.jp/?hl=ja#view=home&op=translate&sl=en&tl=ja&text=";
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+
+            string val = tbEnWord.Text;
+            if (string.IsNullOrEmpty(val))
+            {
+                return;
+            }
+
+            Process p=null;
+            try
+            {
+                p = Process.Start(uri + val);
+            }
+            catch { }
+            finally
+            {
+                if (p != null)
+                {
+                    p.Kill();
+                    p.Dispose();
+                }
+
+            }
+
+
+
+        }
+
+        string uri2 = "https://translate.google.co.jp/?hl=ja#view=home&op=translate&sl=ja&tl=en&text=";
+
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            string val = tbEnWord.Text;
+            if (string.IsNullOrEmpty(val))
+            {
+                return;
+            }
+
+            Process p = null;
+            try
+            {
+                p = Process.Start(uri2 + val);
+            }
+            catch { }
+            finally
+            {
+                if (p != null)
+                {
+                    p.Kill();
+                    p.Dispose();
+                }
+
+            }
+
+        }
+
+        private void chMost_CheckedChanged(object sender, EventArgs e)
+        {
+           
+        }
+
+        private void chMost_CheckedChanged_1(object sender, EventArgs e)
+        {
+            this.TopMost = chMost.Checked;
         }
     }
 }
