@@ -28,130 +28,161 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.tabControl1 = new System.Windows.Forms.TabControl();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.chkMch = new System.Windows.Forms.CheckBox();
+            this.btnShow = new System.Windows.Forms.Button();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.BtnImport = new System.Windows.Forms.Button();
+            this.tbSearch = new System.Windows.Forms.TextBox();
+            this.btnReload = new System.Windows.Forms.Button();
+            this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.listResult = new System.Windows.Forms.ListView();
             this.文字列 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ファイル名 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.シート名 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.tbSearch = new System.Windows.Forms.TextBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.gridResult = new System.Windows.Forms.DataGridView();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.tabControl1.SuspendLayout();
-            this.tabPage1.SuspendLayout();
+            this.gridResult = new System.Windows.Forms.DataGridView();
+            this.chDouble = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridResult)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
+            this.splitContainer1.Panel1.SuspendLayout();
+            this.splitContainer1.Panel2.SuspendLayout();
+            this.splitContainer1.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.gridResult)).BeginInit();
             this.SuspendLayout();
-            // 
-            // tabControl1
-            // 
-            this.tabControl1.Controls.Add(this.tabPage1);
-            this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
-            this.tabControl1.Margin = new System.Windows.Forms.Padding(4);
-            this.tabControl1.Name = "tabControl1";
-            this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(437, 356);
-            this.tabControl1.TabIndex = 0;
-            // 
-            // tabPage1
-            // 
-            this.tabPage1.Controls.Add(this.tableLayoutPanel1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
-            this.tabPage1.Margin = new System.Windows.Forms.Padding(4);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage1.Size = new System.Drawing.Size(429, 327);
-            this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "ファイル検索";
-            this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 3;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Controls.Add(this.chkMch, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.button1, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.BtnImport, 2, 0);
-            this.tableLayoutPanel1.Controls.Add(this.listResult, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.tbSearch, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.button2, 2, 1);
-            this.tableLayoutPanel1.Controls.Add(this.panel1, 2, 2);
+            this.tableLayoutPanel1.ColumnCount = 4;
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 78.94736F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 21.05264F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 120F));
+            this.tableLayoutPanel1.Controls.Add(this.groupBox1, 0, 0);
+            this.tableLayoutPanel1.Controls.Add(this.button1, 2, 0);
+            this.tableLayoutPanel1.Controls.Add(this.tbSearch, 1, 0);
+            this.tableLayoutPanel1.Controls.Add(this.btnReload, 3, 0);
+            this.tableLayoutPanel1.Controls.Add(this.splitContainer1, 0, 1);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(4, 4);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 3;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 38F));
+            this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 38F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(421, 319);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(890, 583);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
-            // chkMch
+            // btnShow
             // 
-            this.chkMch.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.chkMch.AutoSize = true;
-            this.chkMch.Location = new System.Drawing.Point(109, 9);
-            this.chkMch.Margin = new System.Windows.Forms.Padding(4);
-            this.chkMch.Name = "chkMch";
-            this.chkMch.Size = new System.Drawing.Size(97, 19);
-            this.chkMch.TabIndex = 4;
-            this.chkMch.Text = "完全一致検索";
-            this.chkMch.UseVisualStyleBackColor = true;
+            this.btnShow.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.btnShow.Font = new System.Drawing.Font("MS UI Gothic", 6F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnShow.Location = new System.Drawing.Point(200, 0);
+            this.btnShow.Name = "btnShow";
+            this.btnShow.Size = new System.Drawing.Size(84, 32);
+            this.btnShow.TabIndex = 15;
+            this.btnShow.Text = "取込画面表示";
+            this.btnShow.UseVisualStyleBackColor = true;
+            this.btnShow.Click += new System.EventHandler(this.btnShow_Click);
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.btnShow);
+            this.groupBox1.Controls.Add(this.chDouble);
+            this.groupBox1.Controls.Add(this.checkBox1);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Location = new System.Drawing.Point(3, 3);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(507, 32);
+            this.groupBox1.TabIndex = 14;
+            this.groupBox1.TabStop = false;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Location = new System.Drawing.Point(388, 6);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(114, 19);
+            this.checkBox1.TabIndex = 4;
+            this.checkBox1.Text = "完全一致のみ";
+            this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // button1
             // 
             this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button1.Location = new System.Drawing.Point(109, 42);
+            this.button1.Location = new System.Drawing.Point(653, 4);
             this.button1.Margin = new System.Windows.Forms.Padding(4);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(97, 30);
+            this.button1.Size = new System.Drawing.Size(112, 30);
             this.button1.TabIndex = 3;
             this.button1.Text = "検索";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // BtnImport
+            // tbSearch
             // 
-            this.BtnImport.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.BtnImport.Location = new System.Drawing.Point(214, 4);
-            this.BtnImport.Margin = new System.Windows.Forms.Padding(4);
-            this.BtnImport.Name = "BtnImport";
-            this.BtnImport.Size = new System.Drawing.Size(203, 30);
-            this.BtnImport.TabIndex = 5;
-            this.BtnImport.Text = "設定画面表示";
-            this.BtnImport.UseVisualStyleBackColor = true;
-            this.BtnImport.Click += new System.EventHandler(this.BtnImport_Click);
+            this.tbSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbSearch.Location = new System.Drawing.Point(517, 8);
+            this.tbSearch.Margin = new System.Windows.Forms.Padding(4);
+            this.tbSearch.Name = "tbSearch";
+            this.tbSearch.Size = new System.Drawing.Size(128, 22);
+            this.tbSearch.TabIndex = 2;
+            // 
+            // btnReload
+            // 
+            this.btnReload.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.btnReload.Font = new System.Drawing.Font("MS UI Gothic", 7F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            this.btnReload.Location = new System.Drawing.Point(772, 3);
+            this.btnReload.Name = "btnReload";
+            this.btnReload.Size = new System.Drawing.Size(115, 32);
+            this.btnReload.TabIndex = 13;
+            this.btnReload.Text = "検索用データ更新";
+            this.btnReload.UseVisualStyleBackColor = true;
+            this.btnReload.Click += new System.EventHandler(this.btnReload_Click);
+            // 
+            // splitContainer1
+            // 
+            this.tableLayoutPanel1.SetColumnSpan(this.splitContainer1, 4);
+            this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer1.Location = new System.Drawing.Point(3, 41);
+            this.splitContainer1.Name = "splitContainer1";
+            this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
+            // 
+            // splitContainer1.Panel1
+            // 
+            this.splitContainer1.Panel1.Controls.Add(this.listResult);
+            // 
+            // splitContainer1.Panel2
+            // 
+            this.splitContainer1.Panel2.Controls.Add(this.panel1);
+            this.splitContainer1.Size = new System.Drawing.Size(884, 539);
+            this.splitContainer1.SplitterDistance = 214;
+            this.splitContainer1.TabIndex = 16;
             // 
             // listResult
             // 
             this.listResult.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.文字列,
             this.ファイル名,
-            this.シート名});
-            this.tableLayoutPanel1.SetColumnSpan(this.listResult, 2);
+            this.シート名,
+            this.columnHeader1});
             this.listResult.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.listResult.Font = new System.Drawing.Font("MS UI Gothic", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
             this.listResult.FullRowSelect = true;
-            this.listResult.Location = new System.Drawing.Point(3, 79);
+            this.listResult.GridLines = true;
+            this.listResult.Location = new System.Drawing.Point(0, 0);
             this.listResult.Name = "listResult";
-            this.listResult.Size = new System.Drawing.Size(204, 237);
+            this.listResult.Size = new System.Drawing.Size(884, 214);
             this.listResult.TabIndex = 8;
             this.listResult.UseCompatibleStateImageBehavior = false;
             this.listResult.View = System.Windows.Forms.View.Details;
             this.listResult.SelectedIndexChanged += new System.EventHandler(this.listResult_SelectedIndexChanged);
+            this.listResult.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.listResult_MouseDoubleClick);
             // 
             // 文字列
             // 
@@ -165,102 +196,93 @@
             // 
             this.シート名.Text = "シート名";
             // 
-            // tbSearch
+            // columnHeader1
             // 
-            this.tbSearch.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tbSearch.Location = new System.Drawing.Point(4, 42);
-            this.tbSearch.Margin = new System.Windows.Forms.Padding(4);
-            this.tbSearch.Name = "tbSearch";
-            this.tbSearch.Size = new System.Drawing.Size(97, 22);
-            this.tbSearch.TabIndex = 2;
-            // 
-            // button2
-            // 
-            this.button2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button2.Location = new System.Drawing.Point(213, 41);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(205, 32);
-            this.button2.TabIndex = 9;
-            this.button2.Text = "データ更新";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click);
-            // 
-            // gridResult
-            // 
-            this.gridResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("MS UI Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.gridResult.DefaultCellStyle = dataGridViewCellStyle1;
-            this.gridResult.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.gridResult.Location = new System.Drawing.Point(0, 0);
-            this.gridResult.Name = "gridResult";
-            this.gridResult.Size = new System.Drawing.Size(205, 237);
-            this.gridResult.TabIndex = 10;
-            this.gridResult.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.gridResult_RowPostPaint);
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
-            this.tabPage2.Margin = new System.Windows.Forms.Padding(4);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(4);
-            this.tabPage2.Size = new System.Drawing.Size(429, 327);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "2";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.columnHeader1.Text = "セル";
+            this.columnHeader1.Width = 130;
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.gridResult);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(213, 79);
+            this.panel1.Location = new System.Drawing.Point(0, 0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(205, 237);
+            this.panel1.Size = new System.Drawing.Size(884, 321);
             this.panel1.TabIndex = 11;
+            // 
+            // gridResult
+            // 
+            this.gridResult.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("MS UI Gothic", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(128)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.gridResult.DefaultCellStyle = dataGridViewCellStyle3;
+            this.gridResult.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.gridResult.Location = new System.Drawing.Point(0, 0);
+            this.gridResult.Name = "gridResult";
+            this.gridResult.Size = new System.Drawing.Size(884, 321);
+            this.gridResult.TabIndex = 10;
+            this.gridResult.RowPostPaint += new System.Windows.Forms.DataGridViewRowPostPaintEventHandler(this.gridResult_RowPostPaint);
+            // 
+            // chDouble
+            // 
+            this.chDouble.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.chDouble.AutoSize = true;
+            this.chDouble.Checked = true;
+            this.chDouble.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chDouble.Location = new System.Drawing.Point(6, 5);
+            this.chDouble.Name = "chDouble";
+            this.chDouble.Size = new System.Drawing.Size(189, 19);
+            this.chDouble.TabIndex = 5;
+            this.chDouble.Text = "ダブルクリックでファイルを開く";
+            this.chDouble.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(437, 356);
-            this.Controls.Add(this.tabControl1);
+            this.ClientSize = new System.Drawing.Size(890, 583);
+            this.Controls.Add(this.tableLayoutPanel1);
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.Text = "検索";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
-            this.tabControl1.ResumeLayout(false);
-            this.tabPage1.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.gridResult)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.splitContainer1.Panel1.ResumeLayout(false);
+            this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
+            this.splitContainer1.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.gridResult)).EndInit();
             this.ResumeLayout(false);
 
         }
 
         #endregion
-
-        private System.Windows.Forms.TabControl tabControl1;
-        private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
         private System.Windows.Forms.TextBox tbSearch;
-        private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.CheckBox chkMch;
-        private System.Windows.Forms.Button BtnImport;
         private System.Windows.Forms.ListView listResult;
         private System.Windows.Forms.ColumnHeader 文字列;
         private System.Windows.Forms.ColumnHeader ファイル名;
         private System.Windows.Forms.ColumnHeader シート名;
-        private System.Windows.Forms.Button button2;
         private System.Windows.Forms.DataGridView gridResult;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.Button btnShow;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button btnReload;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.SplitContainer splitContainer1;
+        private System.Windows.Forms.CheckBox chDouble;
     }
 }
 

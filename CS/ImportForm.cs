@@ -18,34 +18,139 @@ namespace SmallUltraGrid
 {
     public partial class ImportForm : Form
     {
+        public enum FileType
+        {
+            Excel,
+            Text
+        }
+
+
+
         public class OneSheet
         {
             public string fileName = string.Empty;
             public string fullPath = string.Empty;
             public string sheetName = string.Empty;
             public List<List<string>> cellValues = new List<List<string>>();
+            public FileType type;
         }
 
+        
 
         public ImportForm()
         {
             InitializeComponent();
         }
 
+        public void SetTbNum(int col , int row)
+        {
+            tbColumn.Text = ""+col;
+            tbRow.Text = ""+row;
+        }
+
+
         public void button1_Click(object sender, EventArgs e)
         {
 
-            List<OneSheet> tmpList = new List<OneSheet>();
-            if (!ReadExcels(out tmpList))
+            List<OneSheet> tmpList;
+            if (!ReadFiles(out tmpList))
             {
                 MessageBox.Show("取込失敗");
                 return;
             }
             Form1.sheetList = tmpList;
+
             SaveData();
         }
 
-        public List<OneSheet> Read(string fileName)
+
+        private bool ReadFiles(out List<OneSheet> retList)
+        {
+            retList = new List<OneSheet>();
+            bool ret = true;
+            try
+            {
+                string directory = Environment.CurrentDirectory + @"\";
+                string[] files = Directory.GetFiles(directory);
+
+                List<string> excelFiles = (from file in files
+                                           where file.Contains(".xlsx") ||
+                                           file.Contains(".xls")
+                                           select file).ToList();
+                List<string> textFiles = (from file in files
+                                          where file.Contains(".txt")
+                                          select file).ToList();
+
+                List<Task> taskList = new List<Task>();
+                List<OneSheet> tmpList = new List<OneSheet>();
+                foreach (string filePath in excelFiles)
+                {
+                    Task t = Task.Run(() =>
+                    {
+                        tmpList.AddRange(ReadExcel(filePath));
+                    });
+                    taskList.Add(t);
+                }
+
+                foreach (string filePath in textFiles)
+                {
+                    Task t = Task.Run(() =>
+                    {
+                        tmpList.AddRange(ReadText(filePath));
+                    });
+                    taskList.Add(t);
+                }
+
+
+                foreach (Task t in taskList)
+                {
+                    t.Wait();
+                }
+
+                retList = tmpList;
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                ret = false;
+            }
+            return ret;
+        }
+        #region テキスト読込
+
+        public List<OneSheet> ReadText(string fileName)
+        {
+            List<OneSheet> ret = new List<OneSheet>();
+
+            string fName = System.IO.Path.GetFileName(fileName);
+            string fullPath = System.IO.Path.GetFullPath(fName);
+
+            StreamReader sr = new StreamReader(fileName, Encoding.GetEncoding("SHIFT_JIS"));
+            OneSheet os = new OneSheet();
+            os.type = FileType.Text;
+            os.fileName = fName;
+            os.fullPath = fullPath;
+            os.sheetName = string.Empty;
+            while (sr.EndOfStream == false)
+            {
+                string line = sr.ReadLine();
+                List<string> rowList = new List<string>();
+                rowList.Add(line);
+                os.cellValues.Add(rowList);
+            }
+
+            ret.Add(os);
+            sr.Close();
+            return ret;
+        }
+
+
+        #endregion
+
+        #region Excel読込
+
+        public List<OneSheet> ReadExcel(string fileName)
         {
             List<OneSheet> ret = new List<OneSheet>();
 
@@ -62,10 +167,9 @@ namespace SmallUltraGrid
             string fName = System.IO.Path.GetFileName(fileName);
             string fullPath = System.IO.Path.GetFullPath(fName);
 
-            //範囲指定
             int maxColumn;
             int maxRow;
-            if(!int.TryParse(tbColumn.Text, out maxColumn))
+            if (!int.TryParse(tbColumn.Text, out maxColumn))
             {
                 maxColumn = 100;
             }
@@ -85,6 +189,7 @@ namespace SmallUltraGrid
 
 
                 OneSheet os = new OneSheet();
+                os.type = FileType.Excel;
                 os.fileName = fName;
                 os.fullPath = fullPath;
                 os.sheetName = ws.Name;
@@ -111,12 +216,11 @@ namespace SmallUltraGrid
         }
 
 
-
         public static string ToAlph(int columnNo)
         {
             if (columnNo < 1)
             {
-                string tmp = string.Empty;
+                string tmp = "--";
                 for (int i = 0; i <= Math.Abs(columnNo); i++)
                 {
                     tmp += " ";
@@ -139,40 +243,9 @@ namespace SmallUltraGrid
         }
 
 
-        private bool ReadExcels(out List<OneSheet> retList)
-        {
-            bool ret = true;
+        #endregion
 
-            string directory = Environment.CurrentDirectory;
-            string[] files = Directory.GetFiles(directory);
-
-            // 同ディレクトリのエクセルファイル絶対パス
-            List<string> excelFiles = (from file in files
-                                       where file.Contains(".xlsx") ||
-                                       file.Contains(".xls")
-                                       select file).ToList();
-
-            List<Task> taskList = new List<Task>();
-            List<OneSheet> tmpList = new List<OneSheet>();
-            foreach (string filePath in excelFiles)
-            {
-                Task t = Task.Run(() =>
-                {
-                    tmpList.AddRange(Read(filePath));
-                });
-                taskList.Add(t);
-            }
-            foreach (Task t in taskList)
-            {
-                t.Wait();
-            }
-
-            retList = tmpList;
-
-            return ret;
-
-        }
-        
+        #region プロセス終了
         private void button2_Click_1(object sender, EventArgs e)
         {
             Process[] pList = Process.GetProcessesByName("Excel");
@@ -181,9 +254,11 @@ namespace SmallUltraGrid
                 p.Kill();
             }
         }
+        #endregion
 
+        #region xml書込読込
 
-        public static readonly string FolderName = Environment.CurrentDirectory;
+        public static readonly string FolderName = Environment.CurrentDirectory + @"\";
         public static readonly string FileN = "Data.xml";
 
         public class ForSaveLoad
@@ -191,15 +266,11 @@ namespace SmallUltraGrid
             public List<OneSheet> sheetDataList = new List<OneSheet>();
         }
 
-
-
         public static void SaveData()
         {
-            //保存先のファイル名
-            string fileName = FolderName+ FileN;
+            string fileName = FolderName + FileN;
 
             // バックアップ作成
-
             for (int i = 5; 0 < i; i--)
             {
                 try
@@ -227,7 +298,6 @@ namespace SmallUltraGrid
 
             }
 
-            //保存するクラス(SampleClass)のインスタンスを作成
             ForSaveLoad f = new ForSaveLoad();
 
             f.sheetDataList = Form1.sheetList;
@@ -235,16 +305,11 @@ namespace SmallUltraGrid
 
             try
             {
-                //XmlSerializerオブジェクトを作成
-                //オブジェクトの型を指定する
                 System.Xml.Serialization.XmlSerializer serializer =
                     new System.Xml.Serialization.XmlSerializer(typeof(ForSaveLoad));
-                //書き込むファイルを開く（UTF-8 BOM無し）
                 System.IO.StreamWriter sw = new System.IO.StreamWriter(
                     fileName, false, new System.Text.UTF8Encoding(false));
-                //シリアル化し、XMLファイルに保存する
                 serializer.Serialize(sw, f);
-                //ファイルを閉じる
                 sw.Close();
             }
             catch (Exception e)
@@ -256,20 +321,15 @@ namespace SmallUltraGrid
 
         public static void LoadData()
         {
-            //保存元のファイル名
             string fileName = FolderName + FileN;
 
             try
             {
-                //XmlSerializerオブジェクトを作成
                 System.Xml.Serialization.XmlSerializer serializer =
                         new System.Xml.Serialization.XmlSerializer(typeof(ForSaveLoad));
-                //読み込むファイルを開く
                 System.IO.StreamReader sr = new System.IO.StreamReader(
                     fileName, new System.Text.UTF8Encoding(false));
-                //XMLファイルから読み込み、逆シリアル化する
                 ForSaveLoad obj = (ForSaveLoad)serializer.Deserialize(sr);
-                //ファイルを閉じる
                 sr.Close();
                 Form1.sheetList = obj.sheetDataList;
             }
@@ -280,7 +340,7 @@ namespace SmallUltraGrid
             }
         }
 
-        
+        #endregion
 
     }
 }
