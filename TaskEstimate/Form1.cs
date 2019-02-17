@@ -299,6 +299,7 @@ namespace TaskEst
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
             SaveData();
+            e.Cancel = true;
         }
     }
 }
