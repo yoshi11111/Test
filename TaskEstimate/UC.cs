@@ -15,6 +15,7 @@ namespace TaskEst
     {
         public DaiTask dai = null;
         public SyoTask syo = null;
+        public SharedInfo shared = null;
         public UcType type;
 
         private const int LatingMin = 1;
@@ -27,6 +28,8 @@ namespace TaskEst
             InitializeComponent();
             dai = data as DaiTask;
             syo = data as SyoTask;
+            shared = data as SharedInfo;
+
             type = tp;
         }
 
@@ -45,15 +48,9 @@ namespace TaskEst
                     tbTask.Text = dai.Task;
                     tbEstimate.Text = (from s in dai.syoList
                                        select s.Estimate).Sum() + "";
-                    tbPerformance.Text = (from s in dai.syoList
-                                          select s.Performance).Sum() + "";
                     checkBox1.Checked = dai.Complete;
 
-                    if (checkBox1.Checked)
-                    {
-                        this.BackColor = Color.Gray;
-                    }
-                    btnDoing.Enabled = false;
+
 
                     break;
                 case UcType.SyoTask:
@@ -65,20 +62,34 @@ namespace TaskEst
                     comboBox1.SelectedText = ("" + syo.Priority);
                     tbTask.Text = syo.Task;
                     tbEstimate.Text = syo.Estimate + "";
-                    tbPerformance.Text = syo.Performance + "";
                     checkBox1.Checked = syo.Complete;
-                    Form1 form = this.ParentForm as Form1;
-                    if (form.DoingSyoTask == syo)
-                    {
-                        btnDoing.BackColor = Color.Red;
-                    }
-                    if (checkBox1.Checked)
-                    {
-                        this.BackColor = Color.Gray;
-                    }
+
+
+                    break;
+                case UcType.Share:
+                    SetCombo();
+                    label1.Visible = false;
+                    label2.Visible = false;
+                    label3.Visible = false;
+                    label4.Visible = false;
+                    comboBox1.SelectedText = ("" + shared.Priority);
+                    tbTask.Text = shared.Task;
+                    tbEstimate.Text = shared.Estimate + "";
+                    checkBox1.Checked = shared.Complete;
+
 
                     break;
             }
+            bool enable = !checkBox1.Checked;
+            foreach (Control con in tableLayoutPanel1.Controls)
+            {
+                if (con is CheckBox)
+                {
+                    continue;
+                }
+                con.Enabled = enable;
+            }
+
         }
 
         private void SetCombo()
@@ -150,7 +161,7 @@ namespace TaskEst
                 //押されたキーが 0～9でない場合は、イベントをキャンセルする
                 e.Handled = true;
             }
-         
+
         }
         private void SetVal(object sender)
         {
@@ -186,7 +197,7 @@ namespace TaskEst
                     {
                         if (0 <= comboBox1.SelectedIndex)
                         {
-                            dai.Priority = int.Parse(comboBox1.Items[comboBox1.SelectedIndex].ToString());
+                            syo.Priority = int.Parse(comboBox1.Items[comboBox1.SelectedIndex].ToString());
                         }
                     }
                     if (sender == tbTask)
@@ -207,9 +218,35 @@ namespace TaskEst
 
                     }
                     break;
+                case UcType.Share:
+                    if (sender == comboBox1)
+                    {
+                        if (0 <= comboBox1.SelectedIndex)
+                        {
+                            shared.Priority = int.Parse(comboBox1.Items[comboBox1.SelectedIndex].ToString());
+                        }
+                    }
+                    if (sender == tbTask)
+                    {
+                        shared.Task = tbTask.Text;
+                    }
+                    if (sender == checkBox1)
+                    {
+                        shared.Complete = checkBox1.Checked;
+                    }
+                    if (sender == tbEstimate)
+                    {
+                        shared.Estimate = double.Parse(tbEstimate.Text);
+                    }
+                    if (sender == checkBox1)
+                    {
+                        shared.Complete = checkBox1.Checked;
 
+                    }
+                    break;
             }
-
+            comboBox1.DropDownStyle = ComboBoxStyle.Simple;
+            comboBox1.DropDownStyle = ComboBoxStyle.DropDown;
         }
 
 
@@ -219,7 +256,6 @@ namespace TaskEst
             Form1 form = this.ParentForm as Form1;
             if (form != null)
             {
-                form.DoingSyoTask = syo;
                 form.RefreshView();
             }
 

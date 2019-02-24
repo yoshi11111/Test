@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,11 +13,28 @@ namespace TaskEst
 {
     public partial class Form1 : Form
     {
-        public UC SelectedUC = null;
-        public SyoTask DoingSyoTask = null;
+
+
+        [DllImport("user32.dll")]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+        [DllImport("user32.dll")]
+        public static extern int ShowWindow(IntPtr hWnd, uint Msg);
+        public class ProcessData
+        {
+            public string fullPath;
+            public string fileName;
+            public int Prio = 1;
+        }
+
+        public List<ProcessData> PDataList = new List<ProcessData>();
+        public List<DaiTask> TaskList = new List<DaiTask>();
+        public List<SharedInfo> SharedInfoList = new List<SharedInfo>();
+
 
         public string BottomStr = string.Empty;
-        public List<DaiTask> TaskList = new List<DaiTask>();
+
+        public UC SelectedUC = null;
         public class DaiTask
         {
             public int ID = 1;
@@ -31,27 +49,36 @@ namespace TaskEst
             public int Priority { get; set; } = 5;
             public string Task { get; set; } = string.Empty;
             public double Estimate = 0;
-            public double Performance = 0;
             public bool Complete;
         }
-
+        public class SharedInfo
+        {
+            public int ID = 1;
+            public int Priority { get; set; } = 5;
+            public string Task { get; set; } = string.Empty;
+            public double Estimate = 0;
+            public bool Complete;
+        }
         public enum UcType
         {
             Header,
             DaiTask,
-            SyoTask
+            SyoTask,
+            Share
         }
 
         public class ForSaveLoad
         {
             public List<DaiTask> list;
             public string bot;
+            public List<ProcessData> pdataList;
+            public List<SharedInfo> sharedInfoList;
         }
 
         public Form1()
         {
             InitializeComponent();
-
+            this.TopMost = true;
 
         }
 
@@ -61,6 +88,9 @@ namespace TaskEst
             //ヘッダー
 
             RefreshView();
+            ReViewGrid();
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
 
         }
 
@@ -77,27 +107,51 @@ namespace TaskEst
                         orderby tt.Complete, tt.Priority descending, tt.ID descending
                         select tt).ToList();
             // 描画
-            flowLayoutPanel1.Controls.Clear();
+            FLP1.Controls.Clear();
 
             foreach (DaiTask dai in TaskList)
             {
-                flowLayoutPanel1.Controls.Add(CreateUC(UcType.DaiTask, dai));
+                FLP1.Controls.Add(CreateUC(UcType.DaiTask, dai));
                 foreach (SyoTask syo in dai.syoList)
                 {
-                    flowLayoutPanel1.Controls.Add(CreateUC(UcType.SyoTask, syo));
+                    FLP1.Controls.Add(CreateUC(UcType.SyoTask, syo));
                 }
             }
             richTextBox1.Text = BottomStr;
-            Form1_SizeChanged(this, null);
+            FLP1_Resize(null, null);
+
+            // 描画
+            FLP3.Controls.Clear();
+            // flow2の描画
+            foreach (ProcessData pd in PDataList)
+            {
+                AddPUC(pd);
+
+            }
+
+
         }
+
+        private void AddPUC(ProcessData pd)
+        {
+            ProcessUC puc = new ProcessUC(pd);
+
+            //  puc.Dock = DockStyle.Top;
+            FLP3.Controls.Add(puc);
+            FLP3_Resize(null, null);
+        }
+
 
         private UC CreateUC(UcType type, object data)
         {
             UC uc = new UC(type, data);
+            //     uc.Anchor = AnchorStyles.Right | AnchorStyles.Left| AnchorStyles.Top;
+            //                        uc.Anchor = AnchorStyles.Top;
+            //uc.Dock = DockStyle.Top;
             return uc;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnDai_Click(object sender, EventArgs e)
         {
             DaiTask dai = new DaiTask();
             if (0 < TaskList.Count)
@@ -107,8 +161,10 @@ namespace TaskEst
             }
             TaskList.Add(dai);
             RefreshView();
-        }
 
+
+
+        }
         private void btnSyo_Click(object sender, EventArgs e)
         {
             UC uc = SelectedUC;
@@ -135,51 +191,6 @@ namespace TaskEst
 
 
 
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            SaveData();
-
-            if (DoingSyoTask == null)
-            {
-                MessageBox.Show("実行中の小項目を選択してください。");
-                return;
-            }
-            DoingSyoTask.Performance +=  ((1.0/60.0/60.0)*(timer1.Interval/1000));
-            RefreshView();
-        }
-
-
-
-
-
-
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-        }
-
-        protected override void OnPaintBackground(PaintEventArgs pevent)
-        {
-            // 何もしない
-            // base.OnPaintBackground(pevent);
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -200,6 +211,8 @@ namespace TaskEst
             ForSaveLoad f = new ForSaveLoad();
             f.list = TaskList;
             f.bot = BottomStr;
+            f.pdataList = PDataList;
+            f.sharedInfoList = SharedInfoList; 
             try
             {
                 foreach (string fileName in fileNames)
@@ -233,6 +246,8 @@ namespace TaskEst
                 sr.Close();
                 this.TaskList = obj.list;
                 this.BottomStr = obj.bot;
+                this.PDataList = obj.pdataList;
+                this.SharedInfoList = obj.sharedInfoList;
             }
             catch (Exception ex)
             {
@@ -252,7 +267,15 @@ namespace TaskEst
         {
             DaiTask d = uc.dai;
             SyoTask s = uc.syo;
-            if (d == null)
+            SharedInfo si = uc.shared;
+            if (d != null)
+            {
+                TaskList.Remove(d);
+                RefreshView();
+
+                return;
+            }
+            if (s != null)
             {
                 foreach (DaiTask dai in TaskList)
                 {
@@ -261,35 +284,27 @@ namespace TaskEst
                         dai.syoList.Remove(s);
                     }
                 }
+                RefreshView();
+
+                return;
             }
-            else
+            if (si != null)
             {
-                TaskList.Remove(d);
+                SharedInfoList.Remove(si);
+                ReViewGrid();
+                return;
+
             }
 
-            RefreshView();
 
         }
 
-        private void Form1_SizeChanged(object sender, EventArgs e)
-        {
-            int w = flowLayoutPanel1.Width - 5;
-            foreach (Control con in flowLayoutPanel1.Controls)
-            {
-                con.Width = w;
-            }
-
-        }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
             SaveData();
         }
 
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            this.TopMost = checkBox1.Checked;
-        }
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
@@ -301,5 +316,114 @@ namespace TaskEst
             SaveData();
             e.Cancel = true;
         }
+
+        private void flowLayoutPanel2_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            for (int i = 0; i < files.Length; i++)
+            {
+                string fPath = files[i];
+                int cnt = (from dt in PDataList
+                           where dt.fullPath == fPath
+                           select dt).ToList().Count();
+                if (0 < cnt)
+                {
+                    continue;
+                }
+
+                ProcessData pd = new ProcessData();
+                pd.fullPath = files[i];
+                pd.fileName = pd.fullPath.Substring(pd.fullPath.LastIndexOf(@"\") + 1);
+                AddPUC(pd);
+                PDataList.Add(pd);
+            }
+        }
+
+        private void flowLayoutPanel2_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.All;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void FLP3_Resize(object sender, EventArgs e)
+        {
+            int w = FLP3.Width - 10;
+            foreach (Control con in FLP3.Controls)
+            {
+                con.Width = w;
+            }
+        }
+        public void RemovePUC(ProcessUC uc)
+        {
+            try
+            {
+                PDataList.Remove(uc.pd);
+                FLP3.Controls.Remove(uc);
+
+
+
+            }
+            catch { }
+
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            SharedInfoList.Add(new SharedInfo());
+            ReViewGrid();
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            ReViewGrid();
+        }
+        private void ReViewGrid()
+        {
+            //ソート
+            
+            SharedInfoList = (from tt in SharedInfoList
+                             orderby tt.Complete, tt.Priority descending, tt.ID descending
+                        select tt).ToList();
+            // 描画
+            FLP2.Controls.Clear();
+
+            foreach (SharedInfo syo in SharedInfoList)
+            {
+                FLP2.Controls.Add(CreateUC(UcType.Share, syo));
+            }
+            FLP2_Resize(null, null);
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            SaveData();
+        }
+
+        private void FLP1_Resize(object sender, EventArgs e)
+        {
+            int w = FLP1.Width - 8;
+            foreach (Control con in FLP1.Controls)
+            {
+                con.Width = w;
+            }
+        }
+
+        private void FLP2_Resize(object sender, EventArgs e)
+        {
+            int w = FLP2.Width - 8;
+            foreach (Control con in FLP2.Controls)
+            {
+                con.Width = w;
+            }
+        }
+
+       
     }
 }
