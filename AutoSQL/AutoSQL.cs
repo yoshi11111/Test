@@ -16,11 +16,11 @@ namespace GenerateSQL
         public AutoSQL()
         {
             InitializeComponent();
-            tbselect.Text = SelectKey;
-            tbjoin.Text = JoinKey;
-            tbwhere.Text = WhereKey;
-            tbgroup.Text = GroupKey;
-            tborder.Text = OrderKey;
+            tbselect.Text = Sel;
+            tbjoin.Text = Joi;
+            tbwhere.Text = Whe;
+            tbgroup.Text = Gro;
+            tborder.Text = Ord;
         }
 
         private string[] NewLineSeparator = new string[] { "\n", "\\n", "\r\n", "\\r\\n", Environment.NewLine };
@@ -44,11 +44,11 @@ namespace GenerateSQL
                 //Text.Split(new string[] { "\r\n" }, StringSplitOptions.None);
                 string[] lines = txt.Split(NewLineSeparator, StringSplitOptions.None);
                 Dictionary<string, List<string>> KeyAndBlock = new Dictionary<string, List<string>>();
-                KeyAndBlock[SelectKey] = GetkeyBlock(SelectKey, lines);
-                KeyAndBlock[JoinKey] = GetkeyBlock(JoinKey, lines);
-                KeyAndBlock[WhereKey] = GetkeyBlock(WhereKey, lines);
-                KeyAndBlock[OrderKey] = GetkeyBlock(OrderKey, lines);
-                KeyAndBlock[GroupKey] = GetkeyBlock(GroupKey, lines);
+                KeyAndBlock[Sel] = GetkeyBlock(Sel, lines);
+                KeyAndBlock[Joi] = GetkeyBlock(Joi, lines);
+                KeyAndBlock[Whe] = GetkeyBlock(Whe, lines);
+                KeyAndBlock[Ord] = GetkeyBlock(Ord, lines);
+                KeyAndBlock[Gro] = GetkeyBlock(Gro, lines);
 
                 //string ret = null;
                 //foreach(KeyValuePair<string, List<string>> kvp in KeyAndBlock)
@@ -91,20 +91,20 @@ namespace GenerateSQL
 
         }
 
-        string SelectKey = "取得項目";
-        string JoinKey = "結合条件";
-        string WhereKey = "検索条件";
-        string OrderKey = "ソート条件";
-        string GroupKey = "集約条件";
+        string Sel = "取得項目";
+        string Joi = "結合条件";
+        string Whe = "検索条件";
+        string Ord = "ソート条件";
+        string Gro = "集約条件";
 
         private void GenarateSQL(Dictionary<string, List<string>> KeyAndBlock)
         {
             StringBuilder sql = new StringBuilder();
-            sql.AppendLine(GetSQL("SELECT", KeyAndBlock[SelectKey], 2, 3));
-            sql.AppendLine(GetFromJoinSQL("FROM", KeyAndBlock[JoinKey], 1, 3, 2, 4));
-            sql.AppendLine(GetWhereSQL(KeyAndBlock[WhereKey]));
-            sql.AppendLine(GetSQL("ORDER BY", KeyAndBlock[OrderKey], 1, 2));
-            sql.AppendLine(GetSQL("GROUP BY", KeyAndBlock[GroupKey], 1, 2));
+            sql.AppendLine(GetSQL("SELECT", KeyAndBlock[Sel], 2, 3));
+            sql.AppendLine(GetFromJoinSQL("FROM", KeyAndBlock[Joi], 1, 3, 2, 4));
+            sql.AppendLine(GetWhereSQL(KeyAndBlock[Whe]));
+            sql.AppendLine(GetSQL("ORDER BY", KeyAndBlock[Ord], 1, 2));
+            sql.AppendLine(GetSQL("GROUP BY", KeyAndBlock[Gro], 1, 2));
             richRightUP.Text = sql.ToString();
         }
         private string GetSQL(string head, List<string> list, int tblIdx, int colIdx)
