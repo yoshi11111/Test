@@ -16,7 +16,8 @@ namespace DataGenerator
         {
             InitializeComponent();
             richTextBox1.Text = sql;
-        
+
         }
     }
 }
+
