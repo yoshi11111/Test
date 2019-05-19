@@ -212,7 +212,7 @@ namespace TaskEst
             f.list = TaskList;
             f.bot = BottomStr;
             f.pdataList = PDataList;
-            f.sharedInfoList = SharedInfoList; 
+            f.sharedInfoList = SharedInfoList;
             try
             {
                 foreach (string fileName in fileNames)
@@ -387,10 +387,10 @@ namespace TaskEst
         private void ReViewGrid()
         {
             //ソート
-            
+
             SharedInfoList = (from tt in SharedInfoList
-                             orderby tt.Complete, tt.Priority descending, tt.ID descending
-                        select tt).ToList();
+                              orderby tt.Complete, tt.Priority descending, tt.ID descending
+                              select tt).ToList();
             // 描画
             FLP2.Controls.Clear();
 
@@ -424,6 +424,11 @@ namespace TaskEst
             }
         }
 
-       
+
     }
 }
+
+
+
+
+
