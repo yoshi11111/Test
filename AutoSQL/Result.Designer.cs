@@ -1,4 +1,4 @@
-﻿namespace GenerateSQL
+﻿namespace AUTOSQL
 {
     partial class ResultForm
     {
@@ -58,3 +58,21 @@
         private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

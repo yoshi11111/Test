@@ -9,10 +9,11 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace GenerateSQL
+namespace AUTOSQL
 {
-    public partial class AutoSQL : Form
+    public partial class AutoSQL : UserControl
     {
+
         public AutoSQL()
         {
             InitializeComponent();
@@ -21,6 +22,7 @@ namespace GenerateSQL
             tbwhere.Text = Whe;
             tbgroup.Text = Gro;
             tborder.Text = Ord;
+            keyList = new List<string>() { Sel, Joi, Whe, Ord, Gro };
         }
 
         private string[] NewLineSeparator = new string[] { "\n", "\\n", "\r\n", "\\r\\n", Environment.NewLine };
@@ -35,11 +37,11 @@ namespace GenerateSQL
                 {
                     return;
                 }
-            
+
 
 
                 txt = txt.Replace("\t", " ");
-                // txt = Regex.Replace(txt, @"\s+", " ");
+                txt = Regex.Replace(txt, @" +", " ");
                 txt.TrimStart();
                 //Text.Split(new string[] { "\r\n" }, StringSplitOptions.None);
                 string[] lines = txt.Split(NewLineSeparator, StringSplitOptions.None);
@@ -47,8 +49,9 @@ namespace GenerateSQL
                 KeyAndBlock[Sel] = GetkeyBlock(Sel, lines);
                 KeyAndBlock[Joi] = GetkeyBlock(Joi, lines);
                 KeyAndBlock[Whe] = GetkeyBlock(Whe, lines);
-                KeyAndBlock[Ord] = GetkeyBlock(Ord, lines);
                 KeyAndBlock[Gro] = GetkeyBlock(Gro, lines);
+                KeyAndBlock[Ord] = GetkeyBlock(Ord, lines);
+
 
                 //string ret = null;
                 //foreach(KeyValuePair<string, List<string>> kvp in KeyAndBlock)
@@ -81,7 +84,7 @@ namespace GenerateSQL
                     continue;
 
                 }
-                if (string.IsNullOrWhiteSpace(lines[i]))
+                if (lines[i].Contains(Sel) || lines[i].Contains(Joi) || lines[i].Contains(Whe) || lines[i].Contains(Ord) || lines[i].Contains(Gro))
                 {
                     break;
                 }
@@ -97,28 +100,60 @@ namespace GenerateSQL
         string Ord = "ソート条件";
         string Gro = "集約条件";
 
+        List<string> keyList;
+
         private void GenarateSQL(Dictionary<string, List<string>> KeyAndBlock)
         {
             StringBuilder sql = new StringBuilder();
-            sql.AppendLine(GetSQL("SELECT", KeyAndBlock[Sel], 2, 3));
-            sql.AppendLine(GetFromJoinSQL("FROM", KeyAndBlock[Joi], 1, 3, 2, 4));
-            sql.AppendLine(GetWhereSQL(KeyAndBlock[Whe]));
-            sql.AppendLine(GetSQL("ORDER BY", KeyAndBlock[Ord], 1, 2));
-            sql.AppendLine(GetSQL("GROUP BY", KeyAndBlock[Gro], 1, 2));
+            string from = string.Empty;
+            sql.AppendLine(GetSQL("SELECT", KeyAndBlock[Sel], 2, 3, ref from));
+            string tmp = GetFromJoinSQL("FROM", KeyAndBlock[Joi], 1, 3, 2, 4);
+            if (string.IsNullOrWhiteSpace(tmp))
+            {
+                tmp = from;
+            }
+            sql.AppendLine(tmp);
+            string whereRet = GetWhereSQL(KeyAndBlock[Whe]).ToUpper().Replace("WHEREWHERE", "WHERE");
+            sql.AppendLine(whereRet);
+            sql.AppendLine(GetSQL("GROUP BY", KeyAndBlock[Gro], 1, 2, ref from));
+            sql.AppendLine(GetSQL("ORDER BY", KeyAndBlock[Ord], 1, 2, ref from));
+
+
+            sql = sql.Replace("\"", "'");
+            string ret = string.Empty;
+            if (checkBox1.Checked)
+            {
+                ret = (" WITH SUB AS( " + sql.ToString() + " ) ");
+            }
+            else
+            {
+                ret = sql.ToString();
+            }
             richRightUP.Text = sql.ToString();
         }
-        private string GetSQL(string head, List<string> list, int tblIdx, int colIdx)
+        private string GetSQL(string head, List<string> list, int tblIdx, int colIdx, ref string from)
         {
             List<string> retList = new List<string>();
+            bool done = false;
             for (int i = 1; i < list.Count; i++)
             {
                 //list[i] = Regex.Replace(list[i], @"\s+", " ");
                 string[] items = list[i].Split(new string[] { " " }, StringSplitOptions.None);
                 if (items.Count() - 1 < Math.Max(tblIdx, colIdx))
                 {
-                    break;
+                    retList.Add("要設計書確認");
+                    continue;
                 }
-                retList.Add(items[tblIdx] + items[colIdx]);
+                if (string.IsNullOrWhiteSpace(items[tblIdx].Trim()) || string.IsNullOrEmpty(items[colIdx].Trim()))
+                {
+                    continue;
+                }
+                if (!done)
+                {
+                    done = true;
+                    from += " FROM " + items[tblIdx];
+                }
+                retList.Add(items[tblIdx] + "." + items[colIdx].Replace("(降順)", "").Replace("(昇順)", " DESC"));
             }
             if (0 < retList.Count)
             {
@@ -146,6 +181,10 @@ namespace GenerateSQL
                 }
                 for (int j = 3; j < items.Count(); j++)
                 {
+                    if (items[j] == "定数" || items[j] == "引数")
+                    {
+                        continue;
+                    }
                     rest += (" " + items[j] + " ");
 
                 }
@@ -212,19 +251,15 @@ namespace GenerateSQL
                 {
                     sql = " OR ";
                 }
-                sql += items[tblIdx1] + "." + items[colIdx1] + "=" + items[tblIdx2] + "." + items[colIdx2];
+                sql += items[tblIdx1] + "." + items[colIdx1] + "=" + items[tblIdx2] + "." + items[colIdx2].Replace("INNER", "").Replace("LEFT", "").Replace("AND", "").Replace("OR", "");
                 retList.Add(sql);
 
-                if (list[i].Contains(AND))
-                {
 
-                    continue;
-                }
 
             }
             if (0 < retList.Count)
             {
-                return head + " " + fromTbl + Environment.NewLine + string.Join("," + Environment.NewLine, retList);
+                return head + " " + fromTbl + Environment.NewLine + string.Join(" " + Environment.NewLine, retList);
             }
             else
             {
@@ -243,104 +278,59 @@ namespace GenerateSQL
                 {
                     continue;
                 }
-                list[i] = ("sql.AppendLine(" + list[i] + ");");
+                if (checkBox1.Checked)
+                {
+                    list[i] = ("with.AppendLine(\" " + list[i] + " \");");
+                }
+                else
+                {
+                    list[i] = ("sql.AppendLine(\" " + list[i] + " \");");
+
+                }
             }
 
-            ResultForm f = new ResultForm(list);
+
+            ResultForm f = new ResultForm(checkBox1.Checked, list);
 
             f.Show();
-        }
-
-        public static Dictionary<string, string> ItemJPAndValueDic = new Dictionary<string, string>();
-        public static Dictionary<string, string> TableJPAndValueDic = new Dictionary<string, string>();
-
-        public class Data2
-        {
-            public List<JPAndPh> itemlist { get; set; }
-            public List<JPAndPh> tablelist { get; set; }
-        }
-
-
-        public class JPAndPh
-        {
-            public JPAndPh(string jp, string ph)
-            {
-                Jp = jp;
-                Ph = ph;
-            }
-
-
-            public JPAndPh() { }
-            public string Jp
-            {
-                get; set;
-            }
-            public string Ph
-            {
-                get; set;
-            }
-        }
-
-
-        #region xml書込読込
-        public static readonly string FolderName = Environment.CurrentDirectory + @"\";
-        public static readonly string BakFileName = DateTime.Today.ToString("yyyyMMdd") + "Data.xml";
-
-        public static void ReadDef()
-        {
-            try
-            {
-
-
-                //保存元のファイル名 
-                string fileName = FolderName + @"definition.xml";
-
-                //XmlSerializerオブジェクトを作成 
-                System.Xml.Serialization.XmlSerializer serializer =
-                    new System.Xml.Serialization.XmlSerializer(typeof(Data2));
-                ////読み込むファイルを開く 
-                System.IO.StreamReader sr = new System.IO.StreamReader(
-                    fileName, new System.Text.UTF8Encoding(false));
-                //XMLファイルから読み込み、逆シリアル化する 
-                Data2 d = (Data2)serializer.Deserialize(sr);
-                List<JPAndPh> obj = d.itemlist;
-                ItemJPAndValueDic = List2Dic(obj);
-                List<JPAndPh> obj2 = d.tablelist;
-                TableJPAndValueDic = List2Dic(obj2);
-                //ファイルを閉じる 
-                sr.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.ToString());
-
-
-
-
-            }
 
         }
-        public static Dictionary<string, string> List2Dic(List<JPAndPh> itemList)
-        {
-            Dictionary<string, string> ret = new Dictionary<string, string>();
-            foreach (JPAndPh item in itemList)
-            {
-                ret[item.Jp] = item.Ph;
-            }
-            return ret;
-        }
-        #endregion
+
 
         private void button3_Click(object sender, EventArgs e)
         {
             string txt = richRightUP.Text;
-            // TODO テーブル名変換のあとカラム名変換＋CALDAYとか削除
-            richRightDown.Text = txt;
+            string ret = SQLSearch.ConvertSql(txt);
+            richRightDown.Text = ret;
+        }
 
+        private void AutoSQL_Load(object sender, EventArgs e)
+        {
+            // searchUC = tabControl1.TabPages[1].Controls[0] as SQLSearch;
+        }
 
+        private void checkBox1_CheckedChanged(object sender, EventArgs e)
+        {
 
+        }
+
+        private void checkBox3_CheckedChanged(object sender, EventArgs e)
+        {
+            Form f = this.ParentForm as Form;
+            f.TopMost = checkBox3.Checked;
         }
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
 
