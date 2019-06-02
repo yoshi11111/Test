@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static Manual.DataMng.Mdl;
+using static Manual.Mdl;
 
 namespace Manual
 {
@@ -22,13 +22,13 @@ namespace Manual
             this.parent = parent;
             this.item = item;
             numericUpDown1.Value = item.sort;
-            richTextBox1.Text = item.text;
+            textBox1.Text = item.text;
 
         }
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            parent.RemoveItem(this.item);
+            Mdl.ProcessList(ProcessingType.Remove, this.parent, this.item);
             Program.fm.ShowItems();
         }
 
@@ -37,29 +37,26 @@ namespace Manual
             BaseItem addItem;
             if (this.item is MajorItem)
             {
-                addItem = new MiddleItem();
+                addItem = new MiddleItem(((MajorItem)this.item).items);
             }
             else
             {
-                addItem = new SmallItem();
+                addItem = new SmallItem(((MiddleItem)this.item).items);
 
             }
 
-            this.item.AddItem(addItem);
+            Mdl.ProcessList(ProcessingType.Add, this.item, addItem);
             Program.fm.ShowItems();
         }
 
         public void SetSmallItemProperty()
         {
             tableLayoutPanel1.ColumnStyles[3].Width = 0;
-
-
-
         }
 
         private void RichTextBox1_TextChanged(object sender, EventArgs e)
         {
-            item.text = richTextBox1.Text;
+            item.text = textBox1.Text;
         }
 
         private void NumericUpDown1_ValueChanged(object sender, EventArgs e)
@@ -73,12 +70,13 @@ namespace Manual
             if (int.TryParse(numericUpDown1.Value.ToString(), out sort))
             {
                 this.item.sort = sort;
-                //parent.SortItems();
-                //parent.items = (from itm in parent.items
-                //                orderby itm.sort
-                //                select itm).ToList();
-                Program.fm.ShowItems();
+                Mdl.ProcessList(ProcessingType.Sort, this.parent, this.item);
             }
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            this.item.text = textBox1.Text;
         }
     }
 }
