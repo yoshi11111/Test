@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static Manual.Mdl;
+using static Manual.DataMng;
 
 namespace Manual
 {
@@ -19,21 +19,12 @@ namespace Manual
             InitializeComponent();
             this.ttl = ttl;
             numericUpDown1.Value = ttl.sort;
-            textBox1.Text = ttl.text;
+            richTextBox1.Text = ttl.text;
 
         }
 
-        private void Button1_Click(object sender, EventArgs e)
-        {
-            this.ttl.items.Add(new MajorItem(ttl.items));
-            Program.fm.ShowItems();
-        }
 
-        private void RichTextBox1_TextChanged(object sender, EventArgs e)
-        {
-            this.ttl.text = textBox1.Text;
-        }
-
+  
         private void NumericUpDown1_ValueChanged(object sender, EventArgs e)
         {
          
@@ -53,7 +44,7 @@ namespace Manual
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            this.ttl.text = textBox1.Text;
+            this.ttl.text = richTextBox1.Text;
         }
     }
 }

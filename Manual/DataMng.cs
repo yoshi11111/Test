@@ -4,14 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using static Manual.Mdl;
-
 namespace Manual
 {
     public static class DataMng
     {
         public static List<Title> TitleList = new List<Title>();
-        
+        public class Title
+        {
+            public int sort=1;
+            public string text = string.Empty;
+            public string leftRtf = string.Empty;
+            public string rightRtf = string.Empty;
+        }
         public static readonly string FolderName = Environment.CurrentDirectory + @"\";
         public static readonly string FileName = "Data.xml";
         public static readonly string BakFileName = DateTime.Today.ToString("yyyyMMdd") + "Data.xml";
