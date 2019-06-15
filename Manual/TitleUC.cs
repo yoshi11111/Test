@@ -18,8 +18,8 @@ namespace Manual
         {
             InitializeComponent();
             this.ttl = ttl;
-            numericUpDown1.Value = ttl.sort;
-            richTextBox1.Text = ttl.text;
+            numericUpDown1.Value = ttl.Sort;
+            richTextBox1.Text = ttl.Text;
 
         }
 
@@ -36,7 +36,7 @@ namespace Manual
             int sort = 1;
             if (int.TryParse(numericUpDown1.Value.ToString(), out sort))
             {
-                this.ttl.sort = sort;
+                this.ttl.Sort = sort;
                 Program.fm.ShowTitles();
             }
 
@@ -44,7 +44,7 @@ namespace Manual
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-            this.ttl.text = richTextBox1.Text;
+            this.ttl.Text = richTextBox1.Text;
         }
     }
 }

@@ -68,7 +68,7 @@
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(395, 66);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(395, 31);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // richTextBox1
@@ -77,9 +77,10 @@
             this.richTextBox1.Location = new System.Drawing.Point(58, 3);
             this.richTextBox1.Name = "richTextBox1";
             this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.None;
-            this.richTextBox1.Size = new System.Drawing.Size(334, 60);
+            this.richTextBox1.Size = new System.Drawing.Size(334, 25);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "";
+            this.richTextBox1.WordWrap = false;
             this.richTextBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
             // 
             // TitleUC
@@ -88,7 +89,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.tableLayoutPanel1);
             this.Name = "TitleUC";
-            this.Size = new System.Drawing.Size(395, 66);
+            this.Size = new System.Drawing.Size(395, 31);
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
             this.tableLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);

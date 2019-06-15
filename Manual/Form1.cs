@@ -42,9 +42,8 @@ namespace Manual
 
             ShowTitles();
             ShowItems();
-
         }
-        
+
         private void TBClicked(object sender, EventArgs e)
         {
 
@@ -61,29 +60,21 @@ namespace Manual
                 return;
             }
 
-            if (string.IsNullOrEmpty(currentTitle.leftRtf) || string.IsNullOrEmpty(currentTitle.rightRtf))
+            if (string.IsNullOrEmpty(currentTitle.Rtf))
             {
                 richTextBox1.Text = string.Empty;
-                richTextBox2.Text = string.Empty;
-
-                for (int i = 0; i < 100; i++)
-                {
-                    richTextBox1.Text += "\n";
-                    richTextBox2.Text += "\n";
-                }               
             }
             else
             {
-                richTextBox1.Rtf = currentTitle.leftRtf;
-                richTextBox2.Rtf = currentTitle.rightRtf;
+                richTextBox1.Rtf = currentTitle.Rtf;
             }
-            }
+        }
 
 
         public void ShowTitles()
         {
             DataMng.TitleList = (from itm in DataMng.TitleList
-                                 orderby itm.sort 
+                                 orderby itm.Sort
                                  select itm).ToList();
             panel1.Controls.Clear();
             currentTitle = null;
@@ -108,66 +99,94 @@ namespace Manual
         }
 
 
-        private void richTextBox1_TextChanged_1(object sender, EventArgs e)
+        private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
             if (currentTitle == null)
             {
                 return;
             }
-            currentTitle.leftRtf = richTextBox1.Rtf;
+            currentTitle.Rtf = richTextBox1.Rtf;
         }
 
-        private void richTextBox2_TextChanged(object sender, EventArgs e)
-        {
-            if (currentTitle == null)
-            {
-                return;
-            }
-            currentTitle.rightRtf = richTextBox2.Rtf;
-        }
-
-        private void richTextBox1_VScroll(object sender, EventArgs e)
-        {
-            // スクロール位置を取得
-            SendMessage(this.richTextBox1.Handle, 0x04DD, 0, ref pos);
-            SendMessage(this.richTextBox2.Handle, 0x04DE, 0, ref pos);
-        }
-
-        private void richTextBox2_VScroll(object sender, EventArgs e)
-        {
-            // スクロール位置を取得
-            SendMessage(this.richTextBox2.Handle, 0x04DD, 0, ref pos);
-            SendMessage(this.richTextBox1.Handle, 0x04DE, 0, ref pos);
-        }
-
-        
-        private void richTextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                AddNewLIne();
-            }
-        }
-        private void AddNewLIne()
-        {
-            //int count1 = richTextBox1.Text.Split(del, StringSplitOptions.None).Count();
-            //int count2 = richTextBox2.Text.Split(del, StringSplitOptions.None).Count();
-            //for (int i = 0; i < count2 - count1; i++)
-            //{
-            //    richTextBox1.Rtf += "\n";
-            //}
-            //for (int i = 0; i < count1 - count2; i++)
-            //{
-            //    richTextBox2.Rtf += "\n";
-            //}
-
-        }
 
         private void button1_Click(object sender, EventArgs e)
         {
             TitleList.Add(new Title());
             ShowTitles();
 
+        }
+
+
+
+        private void FontChange(object sender, EventArgs e)
+        {
+
+            if (sender == BtnBlack)
+            {
+                richTextBox1.SelectionColor = Color.Black;
+            }
+            if (sender == BtnBlue)
+            {
+                richTextBox1.SelectionColor = Color.Blue;
+            }
+            if (sender == BtnRed)
+            {
+                richTextBox1.SelectionColor = Color.Red;
+            }
+            Font fnt = null;
+            if (sender == BtnBold)
+            {
+                fnt = new Font(richTextBox1.Font.FontFamily,
+                      richTextBox1.Font.Size,
+                      richTextBox1.Font.Style | FontStyle.Bold);
+                richTextBox1.SelectionFont = fnt;
+            }
+            if (sender == BtnUnder)
+            {
+                fnt = new Font(richTextBox1.Font.FontFamily,
+                    richTextBox1.Font.Size,
+                    richTextBox1.Font.Style | FontStyle.Underline);
+                richTextBox1.SelectionFont = fnt;
+
+            }
+            if (sender == BtnClear)
+            {
+                fnt = new Font(richTextBox1.Font.FontFamily,
+                    richTextBox1.Font.Size,
+                    richTextBox1.Font.Style);
+                richTextBox1.SelectionFont = fnt;
+
+            }
+            if (fnt != null)
+            {
+                fnt.Dispose();
+            }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            string word = TbSrc.Text;
+            foreach (Title ttl in TitleList)
+            {
+                if(MatchWord(word, ttl.Text))
+                {
+
+                }
+            }
+
+
+
+        }
+
+        private bool MatchWord(string word , string tgt)
+        {
+            string prevWord = word;
+
+            if (tgt.IndexOf(word) >= 0)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

@@ -11,10 +11,9 @@ namespace Manual
         public static List<Title> TitleList = new List<Title>();
         public class Title
         {
-            public int sort=1;
-            public string text = string.Empty;
-            public string leftRtf = string.Empty;
-            public string rightRtf = string.Empty;
+            public int Sort=1;
+            public string Text = string.Empty;
+            public string Rtf = string.Empty;
         }
         public static readonly string FolderName = Environment.CurrentDirectory + @"\";
         public static readonly string FileName = "Data.xml";
