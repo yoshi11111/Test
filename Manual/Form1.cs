@@ -50,6 +50,7 @@ namespace Manual
             TitleUC uc = ((Control)sender).Parent.Parent as TitleUC;
             currentTitle = uc.ttl;
             ShowItems();
+            SearchWord();
 
         }
         public void ShowItems()
@@ -90,6 +91,7 @@ namespace Manual
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)
         {
+            BackColorClear();
             DataMng.SaveData();
         }
 
@@ -115,7 +117,6 @@ namespace Manual
             ShowTitles();
 
         }
-
 
 
         private void FontChange(object sender, EventArgs e)
@@ -165,20 +166,66 @@ namespace Manual
 
         private void button4_Click(object sender, EventArgs e)
         {
-            string word = TbSrc.Text;
-            foreach (Title ttl in TitleList)
+            SearchWord();
+
+        }
+        private void BackColorClear()
+        {
+            foreach (TitleUC uc in panel1.Controls)
             {
-                if(MatchWord(word, ttl.Text))
-                {
-
-                }
+                uc.richTextBox1.BackColor = Color.White;
             }
-
+            richTextBox1.SelectionStart = 0;
+            richTextBox1.SelectionLength = richTextBox1.Text.Length;
+            richTextBox1.SelectionBackColor = Color.White;
 
 
         }
 
-        private bool MatchWord(string word , string tgt)
+        private void SearchWord()
+        {
+            BackColorClear();
+            string word = TbSrc.Text;
+            if (string.IsNullOrEmpty(word.Trim()))
+            {
+                return;
+            }
+            foreach (TitleUC uc in panel1.Controls)
+            {
+                Title ttl = uc.ttl;
+                if (ttl == null)
+                {
+                    continue;
+                }
+                RichForSearch.Rtf = ttl.Rtf;
+                if (MatchWord(word, RichForSearch.Text))
+                {
+                    uc.richTextBox1.BackColor = Color.Yellow;
+                }
+            }
+
+            System.IO.StringReader rs = new System.IO.StringReader(richTextBox1.Text);
+            //ストリームの末端まで繰り返す
+            while (rs.Peek() > -1)
+            {
+                string line = rs.ReadLine();
+                int idx = line.IndexOf(word);
+                if (idx < 0)
+                {
+                    continue;
+                }
+                idx = richTextBox1.Text.IndexOf(line);
+                richTextBox1.SelectionStart = idx;
+                richTextBox1.SelectionLength = word.Length;
+                richTextBox1.SelectionBackColor = Color.Yellow;
+
+
+            }
+
+        }
+
+
+        private bool MatchWord(string word, string tgt)
         {
             string prevWord = word;
 

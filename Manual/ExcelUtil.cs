@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using Excel = Microsoft.Office.Interop.Excel;
+//using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Manual
 {
@@ -129,26 +129,26 @@ namespace Manual
             //    GC.Collect();
             //}
         }
-        public void Outputter(Excel.Range w_rgn, int row, int col, string val)
-        {
-            // Excelのcell指定
-            Excel.Range rgn = w_rgn[row, col];
+        //public void Outputter(Excel.Range w_rgn, int row, int col, string val)
+        //{
+        //    // Excelのcell指定
+        //    Excel.Range rgn = w_rgn[row, col];
 
-            try
-            {
-                // Excelにデータをセット
-                rgn.Value2 = val;
-            }
-            finally
-            {
-                Marshal.ReleaseComObject(rgn);
+        //    try
+        //    {
+        //        // Excelにデータをセット
+        //        rgn.Value2 = val;
+        //    }
+        //    finally
+        //    {
+        //        Marshal.ReleaseComObject(rgn);
 
-                rgn = null;
-            }
+        //        rgn = null;
+        //    }
 
 
 
-        }
+        //}
 
     }
 }
