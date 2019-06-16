@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -11,14 +12,13 @@ using static Manual.DataMng;
 
 namespace Manual
 {
+    #region Form1
+
     public partial class Form1 : Form
     {
         public static Title currentTitle;
-        private Point pos;
 
-        [System.Runtime.InteropServices.DllImport("USER32.dll")]
-        private static extern IntPtr SendMessage(System.IntPtr hWnd, Int32 Msg, Int32 wParam, ref Point lParam);
-
+       
         private string[] del = { "\n" };
 
 
@@ -26,10 +26,43 @@ namespace Manual
         {
             InitializeComponent();
         }
+
+        bool closeOpe = false;
+        private void setComponents()
+        {
+            NotifyIcon icon = new NotifyIcon();
+            icon.Icon = Properties.Resources.app;
+
+            icon.Visible = true;
+            icon.Text = "常駐アプリテスト";
+            icon.Click += new EventHandler(ShowForm);
+            ContextMenuStrip menu = new ContextMenuStrip();
+
+            ToolStripMenuItem menuItem2 = new ToolStripMenuItem();
+            menuItem2.Text = "&exit";
+            menuItem2.Click += new EventHandler(Close_Click);
+            menu.Items.Add(menuItem2);
+            icon.ContextMenuStrip = menu;
+        }
+        private void ShowForm(object sender, EventArgs e)
+        {
+            this.Visible = true;
+            this.BringToFront();
+        }
+
+        private void Close_Click(object sender, EventArgs e)
+        {
+            SaveData();
+            closeOpe = true;
+            Application.Exit();
+        }
+
         public delegate void Clickded();
         int textBoxCnt = 10;
         private void Form1_Load(object sender, EventArgs e)
         {
+            this.setComponents();
+
             DataMng.LoadData();
             if (DataMng.TitleList == null || DataMng.TitleList.Count == 0)
             {
@@ -78,14 +111,17 @@ namespace Manual
                                  orderby itm.Sort
                                  select itm).ToList();
             panel1.Controls.Clear();
+            panel1.SuspendLayout();
             currentTitle = null;
             foreach (Title ttl in DataMng.TitleList)
             {
                 TitleUC tb = new TitleUC(ttl);
-                tb.richTextBox1.Click += TBClicked;
+                tb.textBox1.Click += TBClicked;
                 tb.Dock = DockStyle.Top;
                 panel1.Controls.Add(tb);
             }
+            panel1.ResumeLayout();
+
         }
 
 
@@ -93,11 +129,19 @@ namespace Manual
         {
             BackColorClear();
             DataMng.SaveData();
+
+            if (!closeOpe)
+            {
+                e.Cancel = true;
+
+            }
+            this.Visible = false;
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            new ExcelUtil().Export();
+            BackColorClear();
+            new OutputUtil().WordExport();
         }
 
 
@@ -164,16 +208,11 @@ namespace Manual
             }
         }
 
-        private void button4_Click(object sender, EventArgs e)
-        {
-            SearchWord();
-
-        }
         private void BackColorClear()
         {
             foreach (TitleUC uc in panel1.Controls)
             {
-                uc.richTextBox1.BackColor = Color.White;
+                uc.textBox1.BackColor = Color.White;
             }
             richTextBox1.SelectionStart = 0;
             richTextBox1.SelectionLength = richTextBox1.Text.Length;
@@ -200,7 +239,7 @@ namespace Manual
                 RichForSearch.Rtf = ttl.Rtf;
                 if (MatchWord(word, RichForSearch.Text))
                 {
-                    uc.richTextBox1.BackColor = Color.Yellow;
+                    uc.textBox1.BackColor = Color.Yellow;
                 }
             }
 
@@ -209,13 +248,13 @@ namespace Manual
             while (rs.Peek() > -1)
             {
                 string line = rs.ReadLine();
-                int idx = line.IndexOf(word);
-                if (idx < 0)
+                int wordIdx = line.IndexOf(word);
+                if (wordIdx < 0)
                 {
                     continue;
                 }
-                idx = richTextBox1.Text.IndexOf(line);
-                richTextBox1.SelectionStart = idx;
+                int lineIdx = richTextBox1.Text.IndexOf(line);
+                richTextBox1.SelectionStart = lineIdx + wordIdx;
                 richTextBox1.SelectionLength = word.Length;
                 richTextBox1.SelectionBackColor = Color.Yellow;
 
@@ -235,5 +274,129 @@ namespace Manual
             }
             return false;
         }
+
+        private void TbSrc_TextChanged(object sender, EventArgs e)
+        {
+            SearchWord();
+        }
+
     }
+
+    #endregion
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #region DataMng
+
+    public static class DataMng
+    {
+        public static List<Title> TitleList = new List<Title>();
+        public class Title
+        {
+            public int Sort = 1;
+            public string Text = string.Empty;
+            public string Rtf = string.Empty;
+        }
+        public static readonly string FolderName = Environment.CurrentDirectory + @"\";
+        public static readonly string FileName = "Data.xml";
+        public static readonly string BakFileName = DateTime.Today.ToString("yyyyMMdd") + "Data.xml";
+
+        public class ForSaveLoad
+        {
+            public List<Title> List;
+        }
+
+
+        public static void SaveData()
+        {
+            string[] fileNames = new string[]{
+            FolderName + FileName,
+            FolderName + BakFileName };
+
+
+
+            ForSaveLoad f = new ForSaveLoad();
+            f.List = TitleList;
+
+            try
+            {
+                foreach (string fileName in fileNames)
+                {
+                    System.Xml.Serialization.XmlSerializer serializer =
+                        new System.Xml.Serialization.XmlSerializer(typeof(ForSaveLoad));
+                    using (System.IO.StreamWriter sw = new System.IO.StreamWriter(
+                        fileName, false, new System.Text.UTF8Encoding(false)))
+                    {
+                        serializer.Serialize(sw, f);
+                        sw.Close();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+
+        }
+
+        public static void LoadData()
+        {
+            string fileName = FolderName + FileName;
+            try
+            {
+                System.Xml.Serialization.XmlSerializer serializer =
+                        new System.Xml.Serialization.XmlSerializer(typeof(ForSaveLoad));
+                using (System.IO.StreamReader sr = new System.IO.StreamReader(
+                    fileName, new System.Text.UTF8Encoding(false)))
+                {
+                    ForSaveLoad obj = (ForSaveLoad)serializer.Deserialize(sr);
+                    sr.Close();
+                    TitleList = obj.List;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+
+            }
+        }
+
+    }
+
+    #endregion
+
 }
