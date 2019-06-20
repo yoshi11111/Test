@@ -18,7 +18,7 @@ namespace Manual
     {
         public static Title currentTitle;
 
-       
+
         private string[] del = { "\n" };
 
 
@@ -83,7 +83,7 @@ namespace Manual
             TitleUC uc = ((Control)sender).Parent.Parent as TitleUC;
             currentTitle = uc.ttl;
             ShowItems();
-            SearchWord();
+            SearchWord(true);
 
         }
         public void ShowItems()
@@ -208,41 +208,32 @@ namespace Manual
             }
         }
 
-        private void BackColorClear()
+        private void BackColorClear(bool onlyRichBox = false)
         {
-            foreach (TitleUC uc in panel1.Controls)
-            {
-                uc.textBox1.BackColor = Color.White;
-            }
             richTextBox1.SelectionStart = 0;
             richTextBox1.SelectionLength = richTextBox1.Text.Length;
             richTextBox1.SelectionBackColor = Color.White;
-
-
-        }
-
-        private void SearchWord()
-        {
-            BackColorClear();
-            string word = TbSrc.Text;
-            if (string.IsNullOrEmpty(word.Trim()))
+            if (onlyRichBox)
             {
                 return;
             }
             foreach (TitleUC uc in panel1.Controls)
             {
-                Title ttl = uc.ttl;
-                if (ttl == null)
-                {
-                    continue;
-                }
-                RichForSearch.Rtf = ttl.Rtf;
-                if (MatchWord(word, RichForSearch.Text))
-                {
-                    uc.textBox1.BackColor = Color.Yellow;
-                }
+                uc.textBox1.BackColor = Color.White;
             }
+            
 
+
+        }
+
+        private void SearchWord(bool onlyRichBox = false)
+        {
+            BackColorClear(onlyRichBox);
+            string word = TbSrc.Text;
+            if (string.IsNullOrEmpty(word.Trim()))
+            {
+                return;
+            }
             System.IO.StringReader rs = new System.IO.StringReader(richTextBox1.Text);
             //ストリームの末端まで繰り返す
             while (rs.Peek() > -1)
@@ -260,6 +251,26 @@ namespace Manual
 
 
             }
+            if (onlyRichBox)
+            {
+                return;
+            }
+          
+            foreach (TitleUC uc in panel1.Controls)
+            {
+                Title ttl = uc.ttl;
+                if (ttl == null)
+                {
+                    continue;
+                }
+                RichForSearch.Rtf = ttl.Rtf;
+                if (MatchWord(word, RichForSearch.Text))
+                {
+                    uc.textBox1.BackColor = Color.Yellow;
+                }
+            }
+
+
 
         }
 
@@ -277,9 +288,13 @@ namespace Manual
 
         private void TbSrc_TextChanged(object sender, EventArgs e)
         {
-            SearchWord();
+
         }
 
+        private void button4_Click(object sender, EventArgs e)
+        {
+            SearchWord();
+        }
     }
 
     #endregion
@@ -331,7 +346,7 @@ namespace Manual
             public string Text = string.Empty;
             public string Rtf = string.Empty;
         }
-        public static readonly string FolderName = Environment.CurrentDirectory + @"\";
+        public static readonly string FolderName = @"C:\Data\";
         public static readonly string FileName = "Data.xml";
         public static readonly string BakFileName = DateTime.Today.ToString("yyyyMMdd") + "Data.xml";
 
