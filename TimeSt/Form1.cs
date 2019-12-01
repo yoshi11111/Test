@@ -22,7 +22,11 @@ namespace TimeSt
             public string perfor = "";
             public int HH = 0;
         }
+
+
         public List<DT> dataList = null;
+
+        List<UserControl1> ucList = new List<UserControl1>();
 
         public Form1()
         {
@@ -44,7 +48,7 @@ namespace TimeSt
                     }
                     if (i == 16)
                     {
-                        dt.plan = "夕会準備";
+                      //  dt.plan = "夕会準備";
 
                     }
 
@@ -52,17 +56,69 @@ namespace TimeSt
                     dataList.Add(dt);
                 }
             }
+            int idx = 0;
             foreach (DT dt in dataList)
             {
                 UserControl1 uc = new UserControl1(dt);
-
+                uc.予定.TextChanged += UcTextChanged;
+                uc.予定.Tag = idx;
                 flowLayoutPanel1.Controls.Add(uc);
+                idx++;
+                ucList.Add(uc);
+
             }
+            ChangeBackColor();
+            rtopChange();
+        }
+
+        private void UcTextChanged(Object sender, EventArgs e)
+        {
 
 
+
+            rtopChange((RichTextBox)sender);
         }
 
 
+        private void rtopChange(RichTextBox rc = null)
+        {
+            int curHOur = DateTime.Now.Hour;
+            if (rc != null)
+            {
+               
+                if ((int)rc.Tag == (curHOur - 9))
+                {
+                    rtop.Text = rc.Text;
+                }
+
+            }
+            else
+            {
+                foreach(UserControl1 uc in ucList)
+                {
+                    if (uc.HH== curHOur)
+                    {
+                        rtop.Text =uc.予定.Text;
+                    }
+
+
+
+
+
+
+                }
+
+
+
+
+
+
+            }
+
+
+
+
+        }
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -86,7 +142,7 @@ namespace TimeSt
             icon.Icon = Properties.Resources.app;
 
             icon.Visible = true;
-            icon.Text = "常駐アプリテスト";
+            icon.Text = "常駐アプリ";
             icon.Click += new EventHandler(ShowForm);
             ContextMenuStrip menu = new ContextMenuStrip();
 
@@ -121,40 +177,6 @@ namespace TimeSt
 
         }
 
-        public bool CheckBox(string zisseki, string yotei, int H)
-        {
-            bool ret = true;
-            this.Visible = true;
-
-            foreach (UserControl1 uc in flowLayoutPanel1.Controls)
-            {
-                uc.予定.TextChanged -= ChangeText;
-                uc.BackColorClear();
-                if (uc.HH < H)
-                {
-                    uc.BackColor = Color.Gray;
-                    uc.Focus();
-                }
-                if (uc.HH == H)
-                {
-                    uc.予定.TextChanged += ChangeText;
-                    rtop.TextChanged += ChangeText;
-                    currentUc = uc;
-                    uc.予定.Text = yotei;
-
-
-
-                }
-                if (uc.HH + 1 == H)
-                {
-                    uc.実績.Text = zisseki;
-
-                }
-            }
-
-            return ret;
-
-        }
 
         public void ChangeText(object sender, EventArgs e)
         {
@@ -186,8 +208,13 @@ namespace TimeSt
         private void timer1_Tick(object sender, EventArgs e)
         {
             DateTime dt = DateTime.Now;
-            string lbl = (dt.Hour + 1) + "時まで…" + (59 - dt.Minute) + "分" + (59 - dt.Second) + "秒";
-            label1.Text = lbl;
+//            string lbl = (dt.Hour + 1) + "時まで残り   " + (59 - dt.Minute) + ":" + (59 - dt.Second) + "";
+
+
+            label1.Text = "残り"+ (59 - dt.Minute) + ":" + (59 - dt.Second) + "";
+
+            label3.Text= "("+(dt.Hour + 1) +"時まで)";
+            //            if (dt.Second == 0 && dt.Minute == 0)
             if (dt.Second == 0 && dt.Minute == 0)
             {
                 try
@@ -202,38 +229,59 @@ namespace TimeSt
                 {
 
                 }
-
-                Dialog d = new Dialog(currentUc);
-                d.ShowDialog(currentUc);
-                CheckBox(d.Zisseki, d.Yotei, dt.Hour);
+                MessageBox.Show("実績と予定を入力");
 
                 SaveData();
-
+                rtopChange();
                 //ShowInputPerfor();
                 //Recode();
                 //ShowInputPl();
             }
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void ChangeBackColor()
         {
-            ShowInputPl();
-        }
-        private void ShowInputPl()
-        {
-            using (InputPl inp = new InputPl())
+            int currentIdx = DateTime.Now.Hour - 9;
+            
+            foreach(UserControl1 uc in ucList)
             {
-                try
-                {
-                    inp.TopMost = true;
-                    inp.ShowDialog();
+            
+                int ucIdx= (int)uc.予定.Tag;
 
-                    //richTextBox1.Text = inp.InpunStr;
+                if (ucIdx + 9 == 12)
+                {
+                    uc.BackColor = Color.LightYellow;
 
                 }
-                catch { }
+                else if (ucIdx + 9 > 17)
+                {
+
+                    uc.BackColor = Color.Blue;
+                    uc.label1.ForeColor = Color.White;
+
+                }
+                else
+                {
+                    uc.BackColor = Color.White;
+
+                }
+
+
+
+
+                if (((int)uc.予定.Tag) < currentIdx)
+                {
+                    uc.BackColor = Color.LightGray;
+                }
+
+
             }
+
+
         }
+
+
+
+
 
         #region xml書込読込
 
@@ -243,6 +291,7 @@ namespace TimeSt
         public class ForSaveLoad
         {
             public List<DT> dataList = new List<DT>();
+            public string RichText = string.Empty;
         }
 
         public void SaveData()
@@ -303,7 +352,7 @@ namespace TimeSt
 
             ForSaveLoad f = new ForSaveLoad();
             f.dataList = dataList;
-
+            f.RichText = richTextBox1.Text;
 
 
 
@@ -336,6 +385,7 @@ namespace TimeSt
                 ForSaveLoad obj = (ForSaveLoad)serializer.Deserialize(sr);
                 sr.Close();
                 dataList = obj.dataList;
+                richTextBox1.Text = obj.RichText;
             }
             catch (Exception ex)
             {
@@ -354,6 +404,11 @@ namespace TimeSt
                 con.Width = flowLayoutPanel1.Width - 25;
 
             }
+        }
+
+        private void TableLayoutPanel2_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }
