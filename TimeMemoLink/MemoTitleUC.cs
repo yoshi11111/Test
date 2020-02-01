@@ -19,7 +19,7 @@ namespace TimeMemoLink
             InitializeComponent();
             this.ttl = ttl;
             numericUpDown1.Value = ttl.Sort;
-            richTextBox1.Text = ttl.Text;
+            textBox1.Text = ttl.Text;
 
         }
 
@@ -58,9 +58,12 @@ namespace TimeMemoLink
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
-            this.ttl.Text = richTextBox1.Text;
+          //  this.ttl.Text = textBox1.Text;
         }
 
-       
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            this.ttl.Text = textBox1.Text;
+        }
     }
 }

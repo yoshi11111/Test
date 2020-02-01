@@ -201,8 +201,8 @@ namespace TimeMemoLink
         }
         private void SaveClicked(object sender, EventArgs e)
         {
-            this.Opacity -= 0.1;
-            if (this.Opacity < 0.1)
+            this.Opacity -= 0.15;
+            if (this.Opacity < 0.16)
             {
                 this.Opacity = 1;
             }
@@ -499,8 +499,8 @@ namespace TimeMemoLink
             foreach (Title ttl in TitleList)
             {
                 MemoTitleUC tb = new MemoTitleUC(ttl);
-                tb.richTextBox1.Click += TBClicked;
-                tb.Dock = DockStyle.Top;
+                tb.textBox1.Click += TBClicked;
+                tb.Dock = DockStyle.Left;
                 tb.sortchangedDelegate = ShowTitles;
                 PnlMemoPage.Controls.Add(tb);
             }
@@ -584,9 +584,9 @@ namespace TimeMemoLink
             {
                 return;
             }
-            foreach (MemoTitleUC uc in PnlTimePage.Controls)
+            foreach (MemoTitleUC uc in PnlMemoPage.Controls)
             {
-                uc.richTextBox1.BackColor = Color.White;
+                uc.textBox1.BackColor = Color.White;
             }
 
 
@@ -623,7 +623,7 @@ namespace TimeMemoLink
                 return;
             }
 
-            foreach (MemoTitleUC uc in PnlTimePage.Controls)
+            foreach (MemoTitleUC uc in PnlMemoPage.Controls)
             {
                 Title ttl = uc.ttl;
                 if (ttl == null)
@@ -633,7 +633,7 @@ namespace TimeMemoLink
                 RichForSearch.Rtf = ttl.Rtf;
                 if (MatchWord(word, RichForSearch.Text))
                 {
-                    uc.richTextBox1.BackColor = Color.Yellow;
+                    uc.textBox1.BackColor = Color.Yellow;
                 }
             }
 
