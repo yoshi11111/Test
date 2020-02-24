@@ -1,0 +1,356 @@
+﻿@using RealEstateSystem.Models
+@using RealEstateSystem.ViewModel
+@model  RealEstateSystem.ViewModel.MasterViewModel
+
+
+@{
+    ViewBag.Title = "Master";
+
+
+    int kmkysIdx = 0;
+
+
+
+}
+
+<style>
+    .collapse {
+        display: none;
+    }
+
+    table td {
+        border: 2px #000000 solid;
+        border-collapse: separate;
+        border-spacing: 5px;
+    }
+</style>
+
+
+<script type="text/javascript">
+    window.addEventListener("load", function () {
+        $('#kmk_type_list').on("change", function () {
+            $(".showtext").addClass("collapse");
+            $(".radio").addClass("collapse");
+            $(".inputtext").addClass("collapse");
+            $(".checkbox").addClass("collapse");
+            var type = $('#kmk_type_list').val();
+            if (type === @((int)Const.項目種別列挙体.テキスト表示)+"") {
+                $(".showtext").removeClass("collapse");
+            }
+            if (type === @((int)@Const.項目種別列挙体.ラジオボタン)+"") {
+                $(".radio").removeClass("collapse");
+            }
+            if (type === @((int)@Const.項目種別列挙体.テキスト入力)+"") {
+                $(".inputtext").removeClass("collapse");
+            }
+            if (type === @((int)@Const.項目種別列挙体.チェックボックス)+"") {
+                $(".checkbox").removeClass("collapse");
+            }
+        });
+
+
+
+        $('#zentei_list').on("change", function () {
+            RefreshJoken($('#zentei_list').val());
+        });
+
+        joken_list
+        // Ajaxによるデータ取得及びテーブルへの反映
+        function RefreshJoken(zenteiid) {
+            $("#joken_list").Value = 0;
+            // 子ノードの削除
+
+              $("#joken_list").empty();
+
+            $.getJSON('/Master/GetJokenList?zenteiid=' + zenteiid, null, function (json) {
+                if (json == null) {
+                    return;
+                }
+                for (var i = 0; i < json.length; i++) {
+
+                    $("#joken_list").append($("<option>").val(json[i].Value).text(json[i].Text));
+
+                }
+            });
+
+        }
+
+
+            $('#kmk_type_list').change();
+            $('#zentei_list').change();
+        });
+
+
+
+</script>
+
+
+
+<br />
+@using (Html.BeginForm("SaveModel", "Master"))
+{
+    <input type="submit" value="更新" />
+}
+<bt />
+@{
+    if (Model.選択中項目ID == null)
+    {
+        @:新規登録
+    }
+    else
+    {
+        @Model.選択中項目ID
+    }
+
+
+}
+
+<br />
+@using (Html.BeginForm("EdiKmkAll", "Master"))
+{
+    <div>
+        @Html.HiddenFor(
+             model => model.選択中項目ID // プロパティ
+             )
+        @Html.Label("項目種別");
+        @*項目種別*@
+        @Html.DropDownListFor(
+                 model => model.項目種別,         // プロパティ
+                 (IEnumerable<SelectListItem>)ViewBag.KmkTypeOptions,  // 選択オプション
+                 " 選択してください ",          // 空オプション
+                 new { @id = "kmk_type_list" }  // その他の属性
+                 )
+    </div>
+    <div class="showtext radio inputtext">
+        @Html.Label("項目条件");
+
+        @*必須かどうか*@
+        @Html.DropDownListFor(
+                 model => model.項目条件,        // プロパティ
+                 (IEnumerable<SelectListItem>)ViewBag.RequiredOptions,  // 選択オプション
+                 " 選択してください ",          // 空オプション
+
+
+                 new { @id = "required_type_list" }  // その他の属性
+                 )
+    </div>
+    <div class="inputtext">
+        @Html.Label("文言前");
+        @Html.TextBoxFor(Model => Model.文言前)
+
+    </div>
+    <div class="inputtext">
+        @Html.Label("文言後");
+        @Html.TextBoxFor(Model => Model.文言後)
+
+    </div>
+
+    <div>
+        @Html.Label("前提項目ID");
+        @*前提項目ID*@
+        @Html.DropDownListFor(
+                 model => model.前提項目ID,        // プロパティ
+                 (IEnumerable<SelectListItem>)ViewBag.ZenteiOptions,  // 選択オプション
+                 " 選択してください ",          // 空オプション
+                 new { @id = "zentei_list" }  // その他の属性
+                 )
+    </div>
+    <div>
+        @Html.Label("前提条件");
+        @*条件*@
+        @Html.DropDownListFor(
+                 model => model.前提条件,        // プロパティ
+                 (IEnumerable<SelectListItem>)ViewBag.JokenOptions,  // 選択オプション
+                 " 選択してください ",          // 空オプション
+                 new { @id = "joken_list" }  // その他の属性
+                 )
+    </div>
+    <div>
+        @Html.Label("項目の状態");
+        @*状態*@
+        @Html.DropDownListFor(
+                 model => model.項目の状態,        // プロパティ
+                 (IEnumerable<SelectListItem>)ViewBag.JotaiOptions,  // 選択オプション
+                 " 選択してください ",          // 空オプション
+                 new { @id = "jotai_list" }  // その他の属性
+                 )
+    </div>
+    <div class="radio checkbox">
+        @Html.Label("項目内容");
+        @Html.TextBoxFor(Model => Model.項目内容)
+
+    </div>
+    <div class="showtext">
+        @Html.Label("テキスト");
+        @Html.TextBoxFor(Model => Model.テキスト)
+    </div>
+
+    <br />
+
+    <input type="submit" name="addKmkYs" value="項目要素追加">
+    <div class="inputtext">
+        <table id="kmkystbl">
+            <tr>
+                <td>項目要素ID</td>
+                <td>項目内容</td>
+                <td colspan="2">表示順</td>
+            </tr>
+            @foreach (var item in Model.項目要素リスト.Where(m => m.項目種別 == (int)Const.項目種別列挙体.テキスト入力).ToList())
+            {
+                <tr>
+                    <td>@item.項目要素ID</td>
+                    <td>@item.項目内容</td>
+                    <td>
+                        @Html.ActionLink("▲", "KmkYsUp", "Master", new { kmkysid = item.項目要素ID }, null)
+
+                    </td>
+                    <td>
+                        @Html.ActionLink("▼", "KmkYsDown", "Master", new { kmkysid = item.項目要素ID }, null)
+
+                    </td>
+                    <td>
+                        @Html.ActionLink("削除", "KmkYsDel", "Master", new { kmkysid = item.項目要素ID }, null)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="checkbox">
+        <table id="kmkystbl">
+            <tr>
+                <td>項目要素ID</td>
+                <td>項目内容</td>
+                <td colspan="2">表示順</td>
+            </tr>
+            @foreach (var item in Model.項目要素リスト.Where(m => m.項目種別 == (int)Const.項目種別列挙体.チェックボックス).ToList())
+            {
+                <tr>
+                    <td>@item.項目要素ID</td>
+                    <td>@item.項目内容</td>
+                    <td>
+                        @Html.ActionLink("▲", "KmkYsUp", "Master", new { kmkysid = item.項目要素ID }, null)
+
+                    </td>
+                    <td>
+                        @Html.ActionLink("▼", "KmkYsDown", "Master", new { kmkysid = item.項目要素ID }, null)
+
+                    </td>
+                    <td>
+                        @Html.ActionLink("削除", "KmkYsDel", "Master", new { kmkysid = item.項目要素ID }, null)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <div class="radio">
+        <table id="kmkystbl">
+            <tr>
+                <td>項目要素ID</td>
+                <td>項目内容</td>
+                <td colspan="2">表示順</td>
+            </tr>
+            @foreach (var item in Model.項目要素リスト.Where(m => m.項目種別 == (int)Const.項目種別列挙体.ラジオボタン).ToList())
+            {
+                <tr>
+                    <td>@item.項目要素ID</td>
+                    <td>@item.項目内容</td>
+
+                    <td>
+                        @Html.ActionLink("▲", "KmkYsUp", "Master", new { kmkysid = item.項目要素ID }, null)
+
+                    </td>
+                    <td>
+                        @Html.ActionLink("▼", "KmkYsDown", "Master", new { kmkysid = item.項目要素ID }, null)
+
+                    </td>
+                    <td>
+                        @Html.ActionLink("削除", "KmkYsDel", "Master", new { kmkysid = item.項目要素ID }, null)
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+    <br />
+
+    <br />
+
+
+    <div>
+        <input type="submit" name="clearKmk" value="クリア">
+        <input type="submit" name="delKmk" value="削除">
+        <input type="submit" name="moveKmk" value="移動">
+        <input type="submit" name="addKmk" value="登録">
+    </div>
+
+
+    <table id="kmktbl">
+        <tr>
+            <td>選択</td>
+            <td>No</td>
+
+            <td>項目ID</td>
+            <td>項目種別</td>
+            <td>項目条件</td>
+            <td>項目内容</td>
+            <td>前提項目ID</td>
+            <td>前提条件</td>
+            <td>項目の状態</td>
+            <td colspan="2">表示順</td>
+
+        </tr>
+        @for (int i = 0; i < Model.項目リスト.Count(); i++)
+        {
+
+
+            @*@using (Html.BeginForm( "EditKmkLine",  "Master",    // コントローラー名
+                new { },        // ルートパラメーター
+                FormMethod.Post,                               // HTTP メソッド
+                new { @id = "fm" + i, enctype = "multipart/form-data" } // その他の属性
+                ))
+                {*@
+
+
+            <tr>
+                <td>
+                    <p>
+                        @Html.CheckBoxFor(model => model.項目リスト[i].選択チェックボックス)
+                        @Html.HiddenFor(model => model.項目リスト[i].項目ID)
+                    </p>
+                </td>
+
+                <td>@Model.項目リスト[i].No</td>
+
+                <td>@Model.項目リスト[i].項目ID </td>
+                <td>@Model.項目リスト[i].項目種別  </td>
+                <td>@Model.項目リスト[i].項目条件  </td>
+                <td>@Model.項目リスト[i].項目内容  </td>
+                <td>@Model.項目リスト[i].前提項目ID  </td>
+                <td>@Model.項目リスト[i].前提条件  </td>
+                <td>@Model.項目リスト[i].項目の状態  </td>
+
+
+                <td>
+                    @Html.ActionLink("▲", "KmkUp", "Master", new { kmkid = (Model.項目リスト[i].項目ID) }, null)
+
+                </td>
+                <td>
+                    @Html.ActionLink("▼", "KmkDown", "Master", new { kmkid = (Model.項目リスト[i].項目ID) }, null)
+
+                </td>
+
+                <td>
+                    @*<form id=@("fm"+i) action="/Master/EditKmkLine" enctype="multipart/form-data" method="post">
+                            <p>
+                                <input type="hidden" name="kmkid" value="@(Model.項目リスト[i].項目ID)" />
+                                <input type="submit" name="select" form="@("fm" + i)" value="選択" />
+                            </p>
+                        </form>*@
+                    @Html.ActionLink("選択", "KmkSelect", "Master", new { kmkid = (Model.項目リスト[i].項目ID) }, null)
+                </td>
+
+            </tr>
+
+        }
+    </table>
+}
+

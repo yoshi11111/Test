@@ -7,10 +7,6 @@ namespace RealEstateSystem.Models
 {
     public static class Const
     {
-        public const int KmkType_ShowText = 0;
-        public const int KmkType_InputText = 1;
-        public const int KmkType_RadioButton = 2;
-        public const int KmkType_CheckBox = 3;
         public const int RequiredType_Required = 0;
         public const int RequiredType_DontRequired = 0;
         public const int Joken_Nyuryoku = 0;
@@ -21,6 +17,11 @@ namespace RealEstateSystem.Models
         public const int Jotai_Hihyoji = 1;
 
 
-
+        public  enum 項目種別列挙体{
+            テキスト表示=0,
+            テキスト入力=1,
+            ラジオボタン=2,
+            チェックボックス=3
+        }
     }
 }
