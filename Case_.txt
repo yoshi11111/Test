@@ -1,0 +1,32 @@
+●以下を全て過去プロジェクトのルールで上書きし、修正●
+　　→前例踏襲  以下の項目を前例に合わせて修正
+　　            ほかの項目あれば前例確認し、追記
+
+■コーディングルール他
+【サーバ】
+定数 		SNAKE_CASE
+変数		camelCase
+プロパティ	PascalCase{ get; set;}
+DB			SNAKE_CASE
+
+【フロント】
+class		kebab-case
+HTML		kebab-case
+JavaScript	camelCase
+Component名	PascalCase
+props-js	camelCase
+props-html	kebab-case
+$emit		kebab-case
+
+■JavaScript
+・importを使用するのか、HTML上で複数のファイルを読み込むのか（common.jsもその他も）
+・<script>タグで一切使用していない、すべて外部であれば全て外部
+・ファイル名
+・現在のプロジェクトで使っていないコードはコメントアウトじゃなく削除
+
+■CSS
+・現在のプロジェクトで使っていないCSSはコメントアウトじゃなく削除
+・ファイル名
+
+
+
