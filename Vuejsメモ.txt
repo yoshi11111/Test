@@ -1,0 +1,4 @@
+スクリプトタグbodyの手前に実装
+templateタグを使う（特にv-for,v-ifの場合）
+v-forで固まりを扱う場合はkeyプロパティでdataと紐づける
+v-forは必ずkey属性を使用しなければならない＋key属性はtemplateタグは不可能
