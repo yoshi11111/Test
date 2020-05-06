@@ -1,0 +1,38 @@
+■EntityFrameworkは使用中止
+　→ただでさえ遅いという報告多数あり。しかもバージョンめちゃふるいのしか使えない。
+　　　後でめちゃくちゃﾊﾟﾌｫｰﾏﾝｽやばいってなるかもしれない
+↓
+今のところ、Datasetの自動生成＋DBNULLを確認不要の以下
+ value =  dr.Field<string>("TITLE");
+
+
+http://endok.hatenablog.com/entry/2018/01/02/142050
+■.netのDBは４つ
+×ADO.NET SqlClient
+　→SqlDataReaderはreader[0]とかやばすぎ。直値丸出しはやばい。
+　　　だからと言って、全カラムのenum定義も手間がかかる。
+【確定】ADO.NET DataSet+型指定データセット自動生成
+×使用しない　　EntityFramework
+×やめたほうがいい。サードパーティnuget。.net3.5に使えるバージョンに不具合あったら詰みDapper
+  →しかもdapperはentityは手動で作る必要があり自動生成無し
+  
+↓
+ADO.NET DataSet+型指定データセット自動生成　に確定
+→まずはデータセットを定義し、使用し、
+土日追加調査で修正されるとしてもdatasetのまとまりや使い方のみだから定義していい
+
+
+
+http://surferonwww.info/BlogEngine/post/2010/09/06/Where-to-put-xsd-file.aspx
+型付datasetはルートフォルダ直下
+
+■■■■■■■■■■■■型付データセットについて■■■■■■■■■■■■
+・使用方法
+C:\Users\USER_PC\Desktop\■■仕事のプロジェクトのための全て■■\■GW中の実装■\■Chapter6複製■EntityFramework無し
+・xsd置き場所は複数datset作るならフォルダ内
+・xsdファイル分割については調査
+・commitやusingについては各種本かウェブ調査
+・DBNullの考慮はウェブ調査
+
+
+
