@@ -1,0 +1,202 @@
+１．aspxファイルの先頭行が別のクラス名、ネームスペースが設定されておりインターナルサーバエラー
+【TODO】２．JSON
+　　↓以下の方法
+    public class JsonModel
+    {  [JsonProperty("textData")]
+        public string TextData { get; set; }
+        
+   [WebMethod]
+   public static string GetText()
+       { JsonModel j = new JsonModel() { TextData = "test" };
+       return JsonConvert.SerializeObject(j);
+       
+   mv.jsonModel = JSON.parse(response.d);
+   
+【TODO】３．サーバーサイドで画面遷移
+　　　Response.Redirect("DatasetTest.aspx");
+　　　で、セッションの内容も渡せて、かつURLも遷移
+  
+【TODO】４．ルーティング→過去のソースと同じ方法でルーティングを行う。前例踏襲でいい
+【TODO】５．trycatch  
+以下のような方法で、かつconnectionをずっと使いまわす方法（ロールバック必要、ﾊﾟﾌｫｰﾏﾝｽ的にもconは上位で作成。）
+または、すでにコミットされている内容から、connだけ使いまわせる形にカスタム
+namespace CSharpSQLServerTransaction
+{
+    class Program
+    {
+        // データベース接続文字列
+        private static readonly string ConnectionString = "Data Source=<ホスト名、またはIPアドレス>; Initial Catalog=SampleDB; User Id=SampleUser; Password=SamplePassword;";
+        // データ更新のSQL
+        private static readonly string UpdateSql = "UPDATE person SET name=@name WHERE id=@id";
+        static void Main(string[] args)
+        {
+            try
+            {
+                // コネクションを生成します。
+                using (var connection = new SqlConnection(ConnectionString))
+                // コマンドオブジェクトを作成します。
+                using (var command = connection.CreateCommand())
+                {
+                    SqlTransaction transaction = null;
+                    try
+                    {
+                        // コネクションをオープンします。
+                        connection.Open();
+                        // トランザクションを開始します。
+                        transaction = connection.BeginTransaction();
+                        // データ更新のSQLを実行します。
+                        command.CommandText = UpdateSql;
+                        command.Parameters.Add(new SqlParameter("@name", "jiro"));
+                        command.Parameters.Add(new SqlParameter("@id", 2));
+                        var result = command.ExecuteNonQuery();
+                        // 実行された結果が1行ではない場合
+                        if (result != 1)
+                        {
+                            Console.WriteLine("データを更新できませんでした。");
+                            // ロールバックします。
+                            transaction.Rollback();
+                            return;
+                        }
+                        // コミットします。
+                        transaction.Commit();
+                    }
+                    // データベース操作で例外が発生した場合
+                    catch (Exception e)
+                    {
+                        // 例外の内容を表示します。
+                        Console.WriteLine(e.Message);
+                        // トランザクションが有効な場合
+                        if (transaction != null)
+                        {
+                            // ロールバックします。
+                            transaction.Rollback();
+                        }
+                    }
+                }
+            }
+            // コネクションオブジェクト、コマンドオブジェクトの生成で例外が発生した場合
+            catch (Exception e)
+            {
+                // 例外の内容を表示します。
+                Console.WriteLine(e.Message);
+            }
+            Console.ReadKey();
+        }
+    }
+}
+       
+       
+【TODO】６．JsonModelsのフォルダ名にする！！JsonModelsの名称で問題ない
+　　　＋前例踏襲フォルダ名とファイル位置
+　　　https://rksoftware.hatenablog.com/entry/2018/06/08/021340
+       
+       
+【TODO】７．区分値、ログとメッセージ→完全に前例踏襲でいい。一度納品通っている
+！！！！！！！！！！！！！【TODO】定数ファイルは前例踏襲！！！！だけどstaticだとケースに使えない説
+
+【TODO】enum はそれぞれ別ファイル＋拡張メソッド必須
+https://qiita.com/tricogimmick/items/38fe86a09e8e0865d471　参考に
+→１ファイル、１publicクラスのほうが一般的に推奨されている。→１enumにつき、１public拡張クラスが必要（開発していくにつれてつくことも）な以上は、１enumにつき、１ファイルでよい。しかも、１つのenumにつき、以下のように４メソッド拡張メソッド作るケースもあるし、今後増える可能性も高い。別ファイルでよい。かつ、区分値は全てenumで。
+ // Gender に対する拡張メソッドの定義
+  // 整数値が enum で定義済みかどうか？
+   // Foreach用のGetEnumeratorを持つヘルパクラス
+    // enum定義をforeachに渡すためのヘルパクラスを返す
+// アナログ単位
+public enum AnalogUnit
+{
+    // 温度
+    TEMPERATRE = 0,
+    // 電流
+    ELECT_CURRENT = 1,
+    // 電圧
+    VOLTAGE = 2,
+}
+Enumの定義名は、先頭が英大文字のキャメルケース(各単語の先頭が英大文字)で記述します
+Enumの値は、全て英数大文字のスネークケース(単語をアンダーバー_で区切る)で記述します。
+!!!!!!!!!!!!const禁止 static readonly!!!!!!!!!!!!バージョニング問題。今後Const禁止
+ 
+// 定数クラス
+public static class CommonConstants
+{
+    <summary>税計算区分</summary>
+    public static class TaxCalcKbn
+    {
+        <summary>非課税</summary>
+        public static readonly string EXEMPT = "0";
+        <summary>内税</summary>
+        public static readonly string INCLUDED = "1";
+        <summary>外税</summary>
+        public static readonly string EXCLUDED = "2";
+    }
+}
+       
+       
+６．Dataset、sql関連のファイル構成ファイル名
+datasetファイル構成、ファイル名、分割　　＋　　SQLとDB周りのフォルダ構成
+・・・例えばDBファイルの名前を「MyDB.mdf」とした場合には、.xsdファイルのファイル名は「MyDBDataSet.xsd」となります。この.xsdファイルがデータセット（もう少し正確にはデータセットの定義）です。
+→【TODO】xsdは、DB名＋DataSet.xsdで確定！！！→【TODO】DB名を客に確認（スキーマ名？　どっちにしてもこっちのDB名にもかかわる）　　→ファイル分ける必要もない。煩雑になるだけだし。無意味。
+
+【TODO】SQLのファイル、IF使ってた頃の前例踏襲で。これがどうしても無理なら、考える→これは前倒し完了してからでよい
+staticはあり得ず、毎回newして、かつcon渡す。
+
+　集中方法と可視化方法記録方法
+【TODO】
+　→まずは30分ごと、むりなら1hごと①WBS進捗度〇△×②その原因・要因③後回しにするTODO、メモ④PCとスマホルール
+　（WBSの進捗中心の思考と原因の明確化が重要）
+
+
+■■まずは対策ではなく、可視化。記録。それで原因明確になってから、対策　　　
+30分ごとに、もしくは1時間ごとに集中度（〇△×）と、その原因、要因を書く→これよりもまずは、WBS進捗への意識の集中重要
+・30分ごとにやること変える系→あまりよくない
+・30分ごとにろけちゃ対応・・・後の話
+・定時後にろけちゃ関連の対応・・・後の話
+
+
+
+<<<DB関連>>>
+■EntityFrameworkは使用中止
+　→ただでさえ遅いという報告多数あり。しかもバージョンめちゃふるいのしか使えない。
+　　　後でめちゃくちゃﾊﾟﾌｫｰﾏﾝｽやばいってなるかもしれない
+↓
+今のところ、Datasetの自動生成＋DBNULLを確認不要の以下
+ value =  dr.Field<string>("TITLE");
+
+
+http://endok.hatenablog.com/entry/2018/01/02/142050
+■.netのDBは４つ
+×ADO.NET SqlClient
+　→SqlDataReaderはreader[0]とかやばすぎ。直値丸出しはやばい。
+　　　だからと言って、全カラムのenum定義も手間がかかる。
+【確定】ADO.NET DataSet+型指定データセット自動生成
+×使用しない　　EntityFramework
+×やめたほうがいい。サードパーティnuget。.net3.5に使えるバージョンに不具合あったら詰みDapper
+  →しかもdapperはentityは手動で作る必要があり自動生成無し
+  
+↓
+ADO.NET DataSet+型指定データセット自動生成　に確定
+→まずはデータセットを定義し、使用し、
+土日追加調査で修正されるとしてもdatasetのまとまりや使い方のみだから定義していい
+
+
+
+http://surferonwww.info/BlogEngine/post/2010/09/06/Where-to-put-xsd-file.aspx
+型付datasetはルートフォルダ直下
+
+■■■■■■■■■■■■型付データセットについて■■■■■■■■■■■■
+・使用方法
+・commitやusingについては各種本かウェブ調査
+・DBNullの考慮はウェブ調査
+
+
+
+
+
+<<<<Vue.JS>>>
+
+スクリプトタグbodyの手前に実装
+templateタグを使う（特にv-for,v-ifの場合）
+v-forで固まりを扱う場合はkeyプロパティでdataと紐づける
+v-forは必ずkey属性を使用しなければならない＋key属性はtemplateタグは不可能
+
+
+       
