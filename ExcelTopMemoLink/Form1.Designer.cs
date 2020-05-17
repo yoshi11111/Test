@@ -422,7 +422,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(436, 25);
             this.textBox1.TabIndex = 11;
-            this.textBox1.Text = "C:\\Users\\USER_PC\\Desktop\\タスク分割.xlsx";
+            this.textBox1.Text = "C:\\タスク分割.xlsx";
             // 
             // Form1
             // 
