@@ -1,0 +1,7 @@
+C:\Users\sbc\Desktop\いろいろ\検討事項・ソース\35Test\35Test\bin\35Test.dll.config
+C:\Users\sbc\Desktop\いろいろ\検討事項・ソース\35Test\35Test\bin\35Test.dll
+C:\Users\sbc\Desktop\いろいろ\検討事項・ソース\35Test\35Test\bin\35Test.pdb
+C:\Users\sbc\Desktop\いろいろ\検討事項・ソース\35Test\35Test\obj\Debug\35Test.dll
+C:\Users\sbc\Desktop\いろいろ\検討事項・ソース\35Test\35Test\obj\Debug\35Test.pdb
+C:\Users\sbc\Desktop\いろいろ\検討事項・ソース\35Test\35Test\obj\Debug\35Test.csprojAssemblyReference.cache
+C:\Users\sbc\Desktop\いろいろ\検討事項・ソース\35Test\35Test\obj\Debug\35Test.csproj.CoreCompileInputs.cache
