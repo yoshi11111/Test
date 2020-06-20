@@ -12,7 +12,9 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.0.0.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script type="text/javascript" src="Scripts/Component.js"></script>
+     
+
+    <%-- <script type="text/javascript" src="Scripts/Component.js"></script>--%>
     <style>
         #overlay {
             /*　要素を重ねた時の順番　*/
@@ -33,57 +35,38 @@
 </head>
 <body>
 
-    <button type="button" id="btn">送信</button>--%>
-    
+   
     <div id="app">
 
-        <%-- 方法１ --%>
-
-        <%-- 方法２ --%>
-        <%--   <input id="ipt_file" type="file" />
-        <a href='#' onclick="UploadFile();" data-role='button'>Upload</a>--%>
-
-        <%--        <h3>file upload (json)</h3>
-        <input type="file" id="fileJson">
-        <label class="label-info">Destination:</label>
-        <input type="text" value="/tmp" id="destinationJson">
-        <button class="btn btn-primary" id="uploadBtn">upload</button>
-        <output id="uploadMsg"></output>--%>
-
-        <%-- 通常POST --%>
-        <%--        <form id="Form1" method="post"  enctype="multipart/form-data">--%>
         <p>送信するファイルを指定して、［送信］ボタンを押してください。</p>
         <p>
             <input id="ipt_file" type="file" />
-            <%--<input id="file1" type="file" name="file1" />--%>
+          
         </p>
         <p>
             <button v-on:click="jsonTest">button</button>
         </p>
-        <%-- </form>--%>
     </div>
 
-
     <script type="text/javascript"> 
-
+    
         const app = new Vue({
             el: '#app',
             data: {
                 files: null
             },
+            //mixins: [Mixin],
             methods: {
 
                 // ■成功例　保存
                 jsonTest: function () {
-                /// 画面ロック
-                
 
                     var upload_file = $('#ipt_file')[0];
                     var oFile = upload_file.files[0];
                     var m_file_name = oFile.name;
 
                     var reader = new FileReader();
-                   // reader.readAsDataURL(oFile);
+                    // reader.readAsDataURL(oFile);
                     reader.readAsBinaryString(oFile);
 
                     //ファイル読込成功イベント
@@ -91,14 +74,16 @@
                         // データURLスキームを取得
                         var data_url_scheme = reader.result;
                         // データURLスキームからbase64形式のバイナリデータに変換する
+                       
                         var base64 = btoa(data_url_scheme);
                         base64 = base64.replace(/^.*,/, '');
                         const options = {
                             headers: { 'Content-Type': 'application/json; charset=utf-8' }
                         };
-
+                        console.log(base64.length);
                         var param = {
-                            json: JSON.stringify(base64)
+                            json: JSON.stringify(base64),
+                            name:m_file_name
                         };
                         axios.post('Default.aspx/Test', param, options)
                             .then(function (response) {
@@ -111,8 +96,8 @@
                 }
             }
         });
-    </script>
 
+    </script>
 </body>
 
 </html>
