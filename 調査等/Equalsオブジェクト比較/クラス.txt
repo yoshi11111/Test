@@ -1,0 +1,13 @@
+
+    [Serializable]
+    public class Person
+    {
+        [Author("P. Ackerman", version = 1.1)]
+        public string Text { get; set; }
+
+        [Author("P. Ackerman", version = 1.1)]
+        public DateTime? DT { get; set; }
+        [Author("P. ", version = 1.1)]
+        public decimal? Deci { get; set; }
+   
+    }

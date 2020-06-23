@@ -1,0 +1,27 @@
+
+
+        private static bool ExcelRead(string filePath, out List<List<string>> rowList)
+        {
+            rowList = new List<List<string>>();
+            using (var stream = File.Open(filePath, FileMode.Open, FileAccess.Read))
+            {
+                using (IExcelDataReader reader = ExcelDataReader.ExcelReaderFactory.CreateReader(stream))
+                {
+                    using (var dataSet = reader.AsDataSet())
+                    {
+                        var dataTable = dataSet.Tables[0];
+                        for (int i = 2; i < dataTable.Rows.Count; i++)
+                        {
+                            DataRow row = dataTable.Rows[i];
+                            List<string> tmp = new List<string>();
+                            foreach (var cell in row.ItemArray)
+                            {
+                                tmp.Add(cell.ToString());
+                            }
+                            rowList.Add(tmp);
+                        }
+                    }
+                }
+            }
+            return true;
+        }
