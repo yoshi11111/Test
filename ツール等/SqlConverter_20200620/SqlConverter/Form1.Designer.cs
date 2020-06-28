@@ -41,6 +41,10 @@
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.headerRadioGroup = new System.Windows.Forms.GroupBox();
+            this.SBCRadio = new System.Windows.Forms.RadioButton();
+            this.DACSRadio = new System.Windows.Forms.RadioButton();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
@@ -48,6 +52,8 @@
             this.tableLayoutPanel2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel3.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
+            this.headerRadioGroup.SuspendLayout();
             this.SuspendLayout();
             // 
             // rtSQL
@@ -80,10 +86,10 @@
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 0);
+            this.tabControl1.Location = new System.Drawing.Point(3, 33);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(427, 373);
+            this.tabControl1.Size = new System.Drawing.Size(421, 337);
             this.tabControl1.TabIndex = 8;
             // 
             // tabPage1
@@ -92,7 +98,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 25);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(419, 344);
+            this.tabPage1.Size = new System.Drawing.Size(413, 308);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "登録";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -109,7 +115,7 @@
             this.tableLayoutPanel1.RowCount = 2;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(413, 338);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(407, 302);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // richTextBox1
@@ -117,7 +123,7 @@
             this.richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.richTextBox1.Location = new System.Drawing.Point(3, 3);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(407, 272);
+            this.richTextBox1.Size = new System.Drawing.Size(401, 236);
             this.richTextBox1.TabIndex = 0;
             this.richTextBox1.Text = "";
             this.richTextBox1.WordWrap = false;
@@ -125,9 +131,9 @@
             // button1
             // 
             this.button1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.button1.Location = new System.Drawing.Point(3, 281);
+            this.button1.Location = new System.Drawing.Point(3, 245);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(407, 54);
+            this.button1.Size = new System.Drawing.Size(401, 54);
             this.button1.TabIndex = 1;
             this.button1.Text = "[ 和名,物理名 ]（カンマ区切り）  \r\nで入力し　テーブル名・カラム名を登録";
             this.button1.UseVisualStyleBackColor = true;
@@ -209,12 +215,60 @@
             this.radioButton2.Text = "物理名→和名";
             this.radioButton2.UseVisualStyleBackColor = true;
             // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 1;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Controls.Add(this.tabControl1, 0, 1);
+            this.tableLayoutPanel4.Controls.Add(this.headerRadioGroup, 0, 0);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 2;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 30F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(427, 373);
+            this.tableLayoutPanel4.TabIndex = 9;
+            // 
+            // headerRadioGroup
+            // 
+            this.headerRadioGroup.Controls.Add(this.DACSRadio);
+            this.headerRadioGroup.Controls.Add(this.SBCRadio);
+            this.headerRadioGroup.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.headerRadioGroup.Location = new System.Drawing.Point(3, 3);
+            this.headerRadioGroup.Name = "headerRadioGroup";
+            this.headerRadioGroup.Size = new System.Drawing.Size(421, 24);
+            this.headerRadioGroup.TabIndex = 9;
+            this.headerRadioGroup.TabStop = false;
+            // 
+            // SBCRadio
+            // 
+            this.SBCRadio.AutoSize = true;
+            this.SBCRadio.Checked = true;
+            this.SBCRadio.Location = new System.Drawing.Point(3, 1);
+            this.SBCRadio.Name = "SBCRadio";
+            this.SBCRadio.Size = new System.Drawing.Size(147, 19);
+            this.SBCRadio.TabIndex = 0;
+            this.SBCRadio.TabStop = true;
+            this.SBCRadio.Text = "SBCエンティティ定義";
+            this.SBCRadio.UseVisualStyleBackColor = true;
+            // 
+            // DACSRadio
+            // 
+            this.DACSRadio.AutoSize = true;
+            this.DACSRadio.Location = new System.Drawing.Point(154, 1);
+            this.DACSRadio.Name = "DACSRadio";
+            this.DACSRadio.Size = new System.Drawing.Size(156, 19);
+            this.DACSRadio.TabIndex = 1;
+            this.DACSRadio.Text = "DACSエンティティ定義";
+            this.DACSRadio.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(427, 373);
-            this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.tableLayoutPanel4);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             this.Name = "Form1";
             this.Text = "Form1";
@@ -226,6 +280,9 @@
             this.groupBox1.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.tableLayoutPanel3.PerformLayout();
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.headerRadioGroup.ResumeLayout(false);
+            this.headerRadioGroup.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -244,6 +301,10 @@
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel3;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.RadioButton radioButton2;
+        private System.Windows.Forms.TableLayoutPanel tableLayoutPanel4;
+        private System.Windows.Forms.GroupBox headerRadioGroup;
+        private System.Windows.Forms.RadioButton DACSRadio;
+        private System.Windows.Forms.RadioButton SBCRadio;
     }
 }
 

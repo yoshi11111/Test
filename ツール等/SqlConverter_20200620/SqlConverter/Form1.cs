@@ -14,13 +14,14 @@ namespace SqlConverter
     {
         public class JpAndPh
         {
+            public bool IsDacs { get; set; }
             public string Jp { get; set; }
             public string Ph { get; set; }
         }
         public static List<JpAndPh> JpAndPhList = new List<JpAndPh>()
         {
-            new JpAndPh(){Jp="項目ID", Ph="ITEM_ID" },
-            new JpAndPh(){Jp="表示順", Ph="DISPLAY_ORDER" },
+            new JpAndPh(){Jp="項目ID", Ph="ITEM_ID" ,IsDacs=false},
+            new JpAndPh(){Jp="表示順", Ph="DISPLAY_ORDER" ,IsDacs=false},
         };
         public Form1()
         {
@@ -31,9 +32,8 @@ namespace SqlConverter
         private void btnCvt_Click(object sender, EventArgs e)
         {
             string after = rtSQL.Text;
-            // 長い和名から変換
-            JpAndPhList = JpAndPhList.OrderBy(m => m.Jp.Length).ToList();
-            foreach (JpAndPh j in JpAndPhList)
+            List<JpAndPh> targetList = JpAndPhList.Where(m=>m.IsDacs== DACSRadio.Checked).OrderBy(m => m.Jp.Length).ToList();
+            foreach (JpAndPh j in targetList)
             {
                 if (radioButton1.Checked)
                 {
@@ -62,7 +62,7 @@ namespace SqlConverter
                         continue;
                     }
                     // 同じキーが存在する場合上書き
-                    JpAndPh dup = JpAndPhList.Where(m => m.Jp == jp.Jp).FirstOrDefault();
+                    JpAndPh dup = JpAndPhList.Where(m => m.Jp == jp.Jp && m.IsDacs==jp.IsDacs).FirstOrDefault();
                     if (dup != null)
                     {
                         JpAndPhList.Remove(dup);
@@ -97,6 +97,7 @@ namespace SqlConverter
             }
             jp.Jp = vals[0];
             jp.Ph = vals[1];
+            jp.IsDacs = DACSRadio.Checked;
             return true;
         }
 
