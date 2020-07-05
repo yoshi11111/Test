@@ -1,0 +1,72 @@
+     ■XSS対策
+    
+        [WebMethod()]
+        public static string DoPost(string json, string type)
+        {
+            var settings = new JsonSerializerSettings
+            {
+                ContractResolver = new CustomResolver(),
+                Formatting = Formatting.Indented
+            };
+            // 画面の開発者ツール等から、すべてのコントロールにタグ文字などを設定できてしまうため
+            // 全てのプロパティをエンコード
+            // こちらが管理していないDBにタブ文字等が入った場合、管轄外の画面に影響が出る可能性があるため
+            // JSONを受け取った時点で全て対処
+            Json j = JsonConvert.DeserializeObject<Json>(json, settings);
+         
+            // v-htmlなど、XSSの発生する可能性はある。
+            // かつ、こちらが管理していないDBにエスケープすべき文字が入力されていた場合
+            // 防げないため、表示するためのJsonも同様にエンコードを行う
+            return JsonConvert.SerializeObject(j, settings);
+        }
+
+        public class CustomResolver : DefaultContractResolver
+        {
+            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+            {
+                IList<JsonProperty> props = base.CreateProperties(type, memberSerialization);
+                foreach (JsonProperty prop in props.Where(p => p.PropertyType == typeof(string)))
+                {
+                    PropertyInfo pi = type.GetProperty(prop.UnderlyingName);
+                    if (pi != null)
+                    {
+                        prop.ValueProvider = new HtmlEncodingValueProvider(pi);
+                    }
+                }
+                return props;
+            }
+
+            protected class HtmlEncodingValueProvider : IValueProvider
+            {
+                private PropertyInfo targetProperty;
+
+                public HtmlEncodingValueProvider(PropertyInfo targetProperty)
+                {
+                    this.targetProperty = targetProperty;
+                }
+                public void SetValue(object target, object value)
+                {
+                    if (value == null)
+                    {
+                        targetProperty.SetValue(target, value, null);
+                    }
+                    else
+                    {
+                        string valueStr = HttpUtility.HtmlDecode(value.ToString());
+                        targetProperty.SetValue(target, HttpUtility.HtmlEncode(valueStr), null);
+                    }
+                }
+                public object GetValue(object target)
+                {
+                    string value = (string)targetProperty.GetValue(target, null);
+                    value = HttpUtility.HtmlDecode(value);
+                    return System.Web.HttpUtility.HtmlEncode(value);
+                }
+            }
+        }
+        
+    ■SQLインジェクション対策→すべてのSQLにおいて、SQLパラメータ（プレスホルダー使用）
+
+    ■CSRF→前回のプロジェクトのソースの確認、及びaiosによる管理？
+    
+
