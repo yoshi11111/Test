@@ -65,8 +65,34 @@
             }
         }
         
-    ■SQLインジェクション対策→すべてのSQLにおいて、SQLパラメータ（プレスホルダー使用）
-
+        
+        
+    public class BaseForm : Page
+    {
+        protected override void OnLoad(EventArgs e)
+        {
+            JsonConvert.DefaultSettings = () => new JsonSerializerSettings
+            {
+                Formatting = Formatting.Indented,
+                ContractResolver = new CustomResolver()
+            };
+        }
+    }
+        
+        
+ 
     ■CSRF→前回のプロジェクトのソースの確認、及びaiosによる管理？
     
 
+
+
+  
+    【単体テストフェーズ完了後（ていうか自分の範囲はもうやってもいい）】
+    ■SQLインジェクション対策→すべてのSQLにおいて、SQLパラメータ（プレスホルダー使用）
+ 　　〇規定がNVercharのため、型指定が必要。じゃないと遅くなる
+ 　　https://baiteen.wordpress.com/2010/11/12/%E3%83%91%E3%83%A9%E3%83%A1%E3%83%BC%E3%82%BF%E3%82%92%E4%BD%BF%E7%94%A8%E3%81%99%E3%82%8B%E3%81%A8sqlserver%E3%81%AE%E3%83%AC%E3%82%B9%E3%83%9D%E3%83%B3%E3%82%B9%E3%81%8C%E9%81%85%E3%81%84
+　　〇LIKE→ LIKE   nullの場合はDBNULLValue、null以外の場合は、%値%
+　　　⇒オーバーロードでみっつ用意して、decimal?string?DateTime?で用意。今のメソッド名のまま、オーバーロード。
+　　　で、型ごとに設定した型設定のsqlparameteer返すようにすればいい
+　　
+　　
