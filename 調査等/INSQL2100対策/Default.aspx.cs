@@ -31,14 +31,21 @@ public partial class _Default : System.Web.UI.Page
             List<DataRow> getRows = new List<DataRow>();
             foreach (List<int> idList in idListList)
             {
-                DataTable dt = Roop(idList, scon, tran);
+                DataTable dt = 呼ぶ側で対策(idList, scon, tran);
                 foreach (DataRow row in dt.Rows)
                 {
                     getRows.Add(row);
                 }
             }
 
-            // ■解決策２　呼ばれる側で対策
+            // ■解決策２　呼ばれる側で対策 こっちのほうがいい気もする。
+            DataTable ret2 = 呼ばれる側で対策(tmpList, scon, tran);
+            getRows.Clear();
+            foreach (DataRow row in ret2.Rows)
+            {
+                getRows.Add(row);
+            }
+
 
             // ■解決策３　ネットで検索して他の対策方法
 
@@ -69,7 +76,7 @@ public partial class _Default : System.Web.UI.Page
         return ret;
     }
 
-    public static DataTable Roop(List<int> idList, SqlConnection con, SqlTransaction tran)
+    public static DataTable 呼ぶ側で対策(List<int> idList, SqlConnection con, SqlTransaction tran)
     {
         DataTable ret = new DataTable();
         List<SqlParameter> paramList = new List<SqlParameter>();
@@ -93,6 +100,43 @@ public partial class _Default : System.Web.UI.Page
             adapter.SelectCommand = cmd;
             cmd.Transaction = tran;
             adapter.Fill(ret);
+        }
+        return ret;
+    }
+
+
+
+
+
+    public static DataTable 呼ばれる側で対策(List<int> wholeIdLIst, SqlConnection con, SqlTransaction tran)
+    {
+        DataTable ret = new DataTable();
+
+        List<List<int>> idLIstLIst = IdSplit(wholeIdLIst);
+        foreach (List<int> idList in idLIstLIst)
+        {
+            List<SqlParameter> paramList = new List<SqlParameter>();
+            List<string> tmpList = new List<string>();
+            for (int i = 0; i < idList.Count(); i++)
+            {
+                string para = "@para" + i;
+                tmpList.Add(para);
+                paramList.Add(new SqlParameter(para, idList[i]));
+            }
+            string insql = string.Join(",", tmpList.ToArray());
+            using (SqlDataAdapter adapter = new SqlDataAdapter())
+            {
+                SqlCommand cmd = new SqlCommand("select * from ガイダンスメンバマスタ where " +
+                    string.Format("ガイダンスメンバマスタＩＤ IN ({0})", insql), con);
+                foreach (SqlParameter sp in paramList)
+                {
+                    cmd.Parameters.Add(sp);
+                }
+
+                adapter.SelectCommand = cmd;
+                cmd.Transaction = tran;
+                adapter.Fill(ret);
+            }
         }
         return ret;
     }
