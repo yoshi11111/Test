@@ -1,4 +1,0 @@
-ExcelDataReader
-ExcelDataReader.DataSet
-
-‚ðnuget
