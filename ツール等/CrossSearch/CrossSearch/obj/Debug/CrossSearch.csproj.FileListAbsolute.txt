@@ -1,0 +1,12 @@
+C:\Users\USER_PC\Desktop\デスクトップのすぐに使用しないファイル\■その他成果物、ソースコード、重要ファイル■\■仕事効率化・自動化・フォーム■\CrossSearch\CrossSearch\bin\Debug\SmallUltraGrid.exe.config
+C:\Users\USER_PC\Desktop\デスクトップのすぐに使用しないファイル\■その他成果物、ソースコード、重要ファイル■\■仕事効率化・自動化・フォーム■\CrossSearch\CrossSearch\bin\Debug\SmallUltraGrid.exe
+C:\Users\USER_PC\Desktop\デスクトップのすぐに使用しないファイル\■その他成果物、ソースコード、重要ファイル■\■仕事効率化・自動化・フォーム■\CrossSearch\CrossSearch\bin\Debug\SmallUltraGrid.pdb
+C:\Users\USER_PC\Desktop\デスクトップのすぐに使用しないファイル\■その他成果物、ソースコード、重要ファイル■\■仕事効率化・自動化・フォーム■\CrossSearch\CrossSearch\obj\Debug\CrossSearch.csprojAssemblyReference.cache
+C:\Users\USER_PC\Desktop\デスクトップのすぐに使用しないファイル\■その他成果物、ソースコード、重要ファイル■\■仕事効率化・自動化・フォーム■\CrossSearch\CrossSearch\obj\Debug\CrossSearch.csproj.ResolveComReference.cache
+C:\Users\USER_PC\Desktop\デスクトップのすぐに使用しないファイル\■その他成果物、ソースコード、重要ファイル■\■仕事効率化・自動化・フォーム■\CrossSearch\CrossSearch\obj\Debug\CrossSearch.Form1.resources
+C:\Users\USER_PC\Desktop\デスクトップのすぐに使用しないファイル\■その他成果物、ソースコード、重要ファイル■\■仕事効率化・自動化・フォーム■\CrossSearch\CrossSearch\obj\Debug\CrossSearch.ImportForm.resources
+C:\Users\USER_PC\Desktop\デスクトップのすぐに使用しないファイル\■その他成果物、ソースコード、重要ファイル■\■仕事効率化・自動化・フォーム■\CrossSearch\CrossSearch\obj\Debug\SmallUltraGrid.Properties.Resources.resources
+C:\Users\USER_PC\Desktop\デスクトップのすぐに使用しないファイル\■その他成果物、ソースコード、重要ファイル■\■仕事効率化・自動化・フォーム■\CrossSearch\CrossSearch\obj\Debug\CrossSearch.csproj.GenerateResource.cache
+C:\Users\USER_PC\Desktop\デスクトップのすぐに使用しないファイル\■その他成果物、ソースコード、重要ファイル■\■仕事効率化・自動化・フォーム■\CrossSearch\CrossSearch\obj\Debug\CrossSearch.csproj.CoreCompileInputs.cache
+C:\Users\USER_PC\Desktop\デスクトップのすぐに使用しないファイル\■その他成果物、ソースコード、重要ファイル■\■仕事効率化・自動化・フォーム■\CrossSearch\CrossSearch\obj\Debug\SmallUltraGrid.exe
+C:\Users\USER_PC\Desktop\デスクトップのすぐに使用しないファイル\■その他成果物、ソースコード、重要ファイル■\■仕事効率化・自動化・フォーム■\CrossSearch\CrossSearch\obj\Debug\SmallUltraGrid.pdb
